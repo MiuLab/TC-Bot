@@ -1,0 +1,11 @@
+request
+inform
+confirm_question
+confirm_answer
+greeting
+closing
+multiple_choice
+thanks
+welcome
+deny
+not_sure
