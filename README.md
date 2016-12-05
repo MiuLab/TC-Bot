@@ -1,9 +1,8 @@
-# UserSimulator
 User Simulation for Task-Completion Dialogues
-This instruction describes how to run the simulation and agents (rule, command line, RL).
+--------------------------------------
+This document describes how to run the simulation and agents (rule, command line, RL).
 
-
-1. Some DataSets: 
+# 1. Some Datasets:
 under this folder: ./src/deep_dialog/data
 
 [movie_kb]
