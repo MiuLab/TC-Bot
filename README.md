@@ -6,7 +6,7 @@ This document describes how to run the simulation and different dialogue agents 
 ## Content
 * [Data](#data)
 * [Parameter](#parameter)
-* [Running Tutorial](#running-tutorial)
+* [Running Dialogue Agent](#running-dialogue-agent)
 * [Evaluation](#evaluation)
 
 ## Data
@@ -83,7 +83,7 @@ under this folders: ./src/deep_dialog/data
 `--trained_model_path`: the trained RL agent model; load the trained model for prediction purpose.
 
 
-## Running Tutorial
+## Running Dialogue Agent
 
 ### Rule Agent
 ```sh
@@ -124,6 +124,8 @@ python run.py --agt 0 --usr 1 --max_turn 40
 	      --run_mode 0
 	      --cmd_input_mode 1
 ```
+
+### End2End RL Agent
 Train End2End RL Agent without NLU and NLG (with simulated noise in NLU)
 ```sh
 python run.py --agt 9 --usr 1 --max_turn 40
