@@ -1,7 +1,7 @@
 # User Simulation for Task Completion Dialogues
 *An implementation of the dialogue agents and user simulation [Li et al. (2016)].*
 
-This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning).
+This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning). More instructions to plug in your customized agents or user simulators are in the Recipe section of the paper.
 
 ## Content
 * [Data](#data)
@@ -10,7 +10,7 @@ This document describes how to run the simulation and different dialogue agents 
 * [Evaluation](#evaluation)
 
 ## Data
-under this folder: ./src/deep_dialog/data
+all the data is under this folder: ./src/deep_dialog/data
 
 * Movie Knowledge Bases<br/>
 `movie_kb.1k.p` --- 94% success rate (for `user_goals_first_turn_template_subsets.v1.p`)<br/>
@@ -68,11 +68,11 @@ under this folder: ./src/deep_dialog/data
 
 ### Display setting
 
-`--run_mode`: 0 for display mode (NL); 1 for debug mode (dia_act); 2 for debug mode (dia_act and NL); >3 for no display (i.e. training)
+`--run_mode`: 0 for display mode (NL); 1 for debug mode (Dia_Act); 2 for debug mode (Dia_Act and NL); >3 for no display (i.e. training)
 
 `--auto_suggest`: 0 for no auto_suggest; 1 for auto_suggest.
 
-`--act_level`: 0 for user simulator is dia_act level; 1 for user simulator is NL level
+`--act_level`: 0 for user simulator is Dia_Act level; 1 for user simulator is NL level
 
 `--cmd_input_mode`: 0 for NL input; 1 for Dia_Act input. (this is for AgentCmd only)
 
