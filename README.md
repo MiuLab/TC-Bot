@@ -89,7 +89,7 @@ python run.py --agt 5 --usr 1 --max_turn 40
 ```
 
 ### Cmd Agent
-NL Input:
+NL Input
 ```sh
 python run.py --agt 0 --usr 1 --max_turn 40
 	      --episodes 150
@@ -115,8 +115,7 @@ python run.py --agt 0 --usr 1 --max_turn 40
 	      --run_mode 0
 	      --cmd_input_mode 1
 ```
-Train RL Agent
-[End2End without NLU and NLG, with simulated noise in NLU]
+Train End2End RL Agent without NLU and NLG (with simulated noise in NLU)
 ```sh
 python run.py --agt 9 --usr 1 --max_turn 40
 	      --movie_kb_path ./deep_dialog/data/movie_kb.1k.p
@@ -134,7 +133,7 @@ python run.py --agt 9 --usr 1 --max_turn 40
 	      --warm_start 1
 	      --warm_start_epochs 120
 ```
-[End2End with NLU and NLG]
+Train End2End RL Agent with NLU and NLG
 ```sh
 python run.py --agt 9 --usr 1 --max_turn 40
 	      --movie_kb_path ./deep_dialog/data/movie_kb.1k.p
