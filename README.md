@@ -33,53 +33,38 @@ all the data is under this folder: ./src/deep_dialog/data
 
 ### Basic setting
 
-`--agt`: the agent id
-
-`--usr`: the user (simulator) id
-
-`--max_turn`: maximum turns
-
-`--episodes`: how many dialogues to run
-
-`--slot_err_prob`: slot level err probability
-
-`--slot_err_mode`: which kind of slot err mode
-
+`--agt`: the agent id<br/>
+`--usr`: the user (simulator) id<br/>
+`--max_turn`: maximum turns<br/>
+`--episodes`: how many dialogues to run<br/>
+`--slot_err_prob`: slot level err probability<br/>
+`--slot_err_mode`: which kind of slot err mode<br/>
 `--intent_err_prob`: intent level err probability
 
 
 ### Data setting
 
-`--movie_kb_path`: the movie kb path for agent side
-
+`--movie_kb_path`: the movie kb path for agent side<br/>
 `--goal_file_path`: the user goal file path for user simulator side
 
 ### Model setting
 
-`--dqn_hidden_size`: hidden size for RL (DQN) agent
-
-`--batch_size`: batch size for DQN training
-
-`--simulation_epoch_size`: how many dialogue to be simulated in one epoch
-
-`--warm_start`: use rule policy to fill the experience replay buffer at the beginning.
-
+`--dqn_hidden_size`: hidden size for RL (DQN) agent<br/>
+`--batch_size`: batch size for DQN training<br/>
+`--simulation_epoch_size`: how many dialogue to be simulated in one epoch<br/>
+`--warm_start`: use rule policy to fill the experience replay buffer at the beginning<br/>
 `--warm_start_epochs`: how many dialogues to run in the warm start
 
 ### Display setting
 
-`--run_mode`: 0 for display mode (NL); 1 for debug mode (Dia_Act); 2 for debug mode (Dia_Act and NL); >3 for no display (i.e. training)
-
-`--auto_suggest`: 0 for no auto_suggest; 1 for auto_suggest.
-
-`--act_level`: 0 for user simulator is Dia_Act level; 1 for user simulator is NL level
-
+`--run_mode`: 0 for display mode (NL); 1 for debug mode (Dia_Act); 2 for debug mode (Dia_Act and NL); >3 for no display (i.e. training)<br/>
+`--auto_suggest`: 0 for no auto_suggest; 1 for auto_suggest<br/>
+`--act_level`: 0 for user simulator is Dia_Act level; 1 for user simulator is NL level<br/>
 `--cmd_input_mode`: 0 for NL input; 1 for Dia_Act input. (this is for AgentCmd only)
 
 ### Others
 
-`--write_model_dir`: the directory to write the models
-
+`--write_model_dir`: the directory to write the models<br/>
 `--trained_model_path`: the path of the trained RL agent model; load the trained model for prediction purpose.
 
 
