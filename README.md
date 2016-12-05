@@ -58,9 +58,9 @@ all the data is under this folder: ./src/deep_dialog/data
 ### Display setting
 
 `--run_mode`: 0 for display mode (NL); 1 for debug mode (Dia_Act); 2 for debug mode (Dia_Act and NL); >3 for no display (i.e. training)<br/>
-`--auto_suggest`: 0 for no auto_suggest; 1 for auto_suggest<br/>
 `--act_level`: 0 for user simulator is Dia_Act level; 1 for user simulator is NL level<br/>
-`--cmd_input_mode`: 0 for NL input; 1 for Dia_Act input. (this is for AgentCmd only)
+`--auto_suggest`: 0 for no auto_suggest; 1 for auto_suggest<br/>
+`--cmd_input_mode`: 0 for NL input; 1 for Dia_Act input. (this parameter is for AgentCmd only)
 
 ### Others
 
@@ -68,7 +68,7 @@ all the data is under this folder: ./src/deep_dialog/data
 `--trained_model_path`: the path of the trained RL agent model; load the trained model for prediction purpose.
 
 
-## Running Dialogue Agent
+## Running Dialogue Agents
 
 ### Rule Agent
 ```sh
