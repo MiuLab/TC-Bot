@@ -6,7 +6,7 @@ This document describes how to run the simulation and different dialogue agents 
 ## Content
 * [Data](#data)
 * [Parameter](#parameter)
-* [Running Dialogue Agent](#running-dialogue-agents)
+* [Running Dialogue Agents](#running-dialogue-agents)
 * [Evaluation](#evaluation)
 
 ## Data
