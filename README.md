@@ -1,13 +1,20 @@
-# User Simulation
-This document describes how to run the simulation and agents (rule, command line, RL).
-Please refer to this paper for the detail.
+# User Simulation for Task Completion Dialogues
+*An implementation of the dialogue agents and user simulation [Li et al. (2016)].*
+
+This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning).
+
+## Content
+* [Data](#data)
+* [Parameter](#parameter)
+* [Running Tutorial](#running-tutorial)
+* [Evaluation](#evaluation)
 
 ## Data
 under this folders: ./src/deep_dialog/data
 
 * Movie Knowledge Bases<br/>
-`movie_kb.1k.p` --- 94% success rate (for user_goals_first_turn_template_subsets.v1.p)<br/>
-`movie_kb.v2.p` --- 36% success rate (for user_goals_first_turn_template_subsets.v1.p)
+`movie_kb.1k.p` --- 94% success rate (for `user_goals_first_turn_template_subsets.v1.p`)<br/>
+`movie_kb.v2.p` --- 36% success rate (for `user_goals_first_turn_template_subsets.v1.p`)
 
 * User Goals<br/>
 `user_goals_first_turn_template.v2.p` --- first turn<br/>
@@ -76,7 +83,7 @@ under this folders: ./src/deep_dialog/data
 `--trained_model_path`: the trained RL agent model; load the trained model for prediction purpose.
 
 
-## Tutorial for Running Different Agents and User Simulators
+## Running Tutorial
 
 ### Rule Agent
 ```sh
@@ -170,7 +177,7 @@ python run.py --agt 9 --usr 1 --max_turn 40
 	      --run_mode 3
 ```
 
-## Learning Curve
-1. Plotting
+## Evaluation
+1. Plotting Learning Curve
 ``` python draw_learning_curve.py --result_file ./deep_dialog/checkpoints/rl_agent/noe2e/agt_9_performance_records.json```
 2. Pull out the numbers and draw the curves in Excel
