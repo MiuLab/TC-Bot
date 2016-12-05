@@ -1,12 +1,12 @@
 # User Simulation for Task Completion Dialogues
-*An implementation of the dialogue agents and user simulation [Li et al. (2016)].*
+*An implementation of the dialogue agents and user simulation [Li et al. (2016), TBA ...].*
 
 This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning). More instructions to plug in your customized agents or user simulators are in the Recipe section of the paper.
 
 ## Content
 * [Data](#data)
 * [Parameter](#parameter)
-* [Running Dialogue Agent](#running-dialogue-agent)
+* [Running Dialogue Agent](#running-dialogue-agents)
 * [Evaluation](#evaluation)
 
 ## Data
@@ -165,8 +165,7 @@ python run.py --agt 9 --usr 1 --max_turn 40
 ```
 
 ## Evaluation
-To evaluate the performance of agents, three metrics are available: success rate, average reward, average turns. Here we show the learning curve with success rate.
-
+To evaluate the performance of agents, three metrics are available: success rate, average reward, average turns. Here we show the learning curve with success rate.<br/>
 1. Plotting Learning Curve
 ``` python draw_learning_curve.py --result_file ./deep_dialog/checkpoints/rl_agent/noe2e/agt_9_performance_records.json```
 2. Pull out the numbers and draw the curves in Excel
