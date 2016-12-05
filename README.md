@@ -4,12 +4,12 @@ This document describes how to run the simulation and agents (rule, command line
 ## Datasets
 under this folder: ./src/deep_dialog/data
 
-* [movie_kb]
-  movie_kb.1k.p: 94% success rate (for user_goals_first_turn_template_subsets.v1.p)
-  movie_kb.v2.p: 36% success rate (for user_goals_first_turn_template_subsets.v1.p)
-* [user goal files]:
-  first turn: user_goals_first_turn_template.v2.p
-  user_goals_first_turn_template.part.movie.v1.p: a subset of user goal. [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
+*   [movie_kb]
+    movie_kb.1k.p: 94% success rate (for user_goals_first_turn_template_subsets.v1.p)
+    movie_kb.v2.p: 36% success rate (for user_goals_first_turn_template_subsets.v1.p)
+*   [user goal files]:
+    first turn: user_goals_first_turn_template.v2.p
+    user_goals_first_turn_template.part.movie.v1.p: a subset of user goal. [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
 * [NLG rule template]
   dia_act_nl_pairs.v6.json: some predefined NLG rule templates for both User simulator and Agent.
 * [Dialog Act Intent]:
