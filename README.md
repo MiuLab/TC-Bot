@@ -4,49 +4,49 @@ This document describes how to run the simulation and agents (rule, command line
 under this folders: ./src/deep_dialog/data
 
 * Movie Knowledge Bases<br/>
-movie_kb.1k.p --- 94% success rate (for user_goals_first_turn_template_subsets.v1.p)
-movie_kb.v2.p --- 36% success rate (for user_goals_first_turn_template_subsets.v1.p)
+`movie_kb.1k.p` --- 94% success rate (for user_goals_first_turn_template_subsets.v1.p)<br/>
+`movie_kb.v2.p` --- 36% success rate (for user_goals_first_turn_template_subsets.v1.p)
 
-* User Goals
-user_goals_first_turn_template.v2.p --- first turn
-user_goals_first_turn_template.part.movie.v1.p --- a subset of user goal [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
+* User Goals<br/>
+`user_goals_first_turn_template.v2.p` --- first turn<br/>
+`user_goals_first_turn_template.part.movie.v1.p` --- a subset of user goal [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
 
-* NLG Rule Template
-dia_act_nl_pairs.v6.json --- some predefined NLG rule templates for both User simulator and Agent.
+* NLG Rule Template<br/>
+`dia_act_nl_pairs.v6.json` --- some predefined NLG rule templates for both User simulator and Agent.
 
-* Dialog Act Intent
-> dia_acts.txt
+* Dialog Act Intent<br/>
+`dia_acts.txt`
 
-* Dialog Act Slot
-> slot_set.txt
+* Dialog Act Slot<br/>
+`slot_set.txt`
 
 ## Parameter
 
--agt: the agent id
-> -usr: the user (simulator) id
-> -max_turn: maximum turns
-> -episodes: how many dialogues you want to run
-> -slot_err_prob: slot level err probability
-> -slot_err_mode: which kind of slot err mode
-> -intent_err_prob: intent level err probability
+`--agt`: the agent id
+`--usr`: the user (simulator) id
+`--max_turn`: maximum turns
+`--episodes`: how many dialogues you want to run
+`--slot_err_prob`: slot level err probability
+`--slot_err_mode`: which kind of slot err mode
+`--intent_err_prob`: intent level err probability
 
--movie_kb_path: the movie kb path for agent side
--goal_file_path: the user goal file path for user simulator side
+`--movie_kb_path`: the movie kb path for agent side
+`--goal_file_path`: the user goal file path for user simulator side
 
--dqn_hidden_size: hidden size for RL (DQN) agent
--batch_size: batch size for DQN training
--simulation_epoch_size: how many dialogue to be simulated in one epoch
+`--dqn_hidden_size`: hidden size for RL (DQN) agent
+`--batch_size`: batch size for DQN training
+`--simulation_epoch_size`: how many dialogue to be simulated in one epoch
 
--warm_start: use rule policy to fill the experience replay buffer at the beginning.
--warm_start_epochs: how many dialogues to run in the warm start
+`--warm_start`: use rule policy to fill the experience replay buffer at the beginning.
+`--warm_start_epochs`: how many dialogues to run in the warm start
 
--run_mode: 0 for display mode (NL); 1 for debug mode (dia_act); 2 for debug mode (dia_act and NL); >3 for no display (i.e. training)
--auto_suggest: 0 for no auto_suggest; 1 for auto_suggest.
--act_level: 0 for user simulator is dia_act level; 1 for user simulator is NL level
--cmd_input_mode: 0 for NL input; 1 for Dia_Act input. (this is for AgentCmd only)
+`--run_mode`: 0 for display mode (NL); 1 for debug mode (dia_act); 2 for debug mode (dia_act and NL); >3 for no display (i.e. training)
+`--auto_suggest`: 0 for no auto_suggest; 1 for auto_suggest.
+`--act_level`: 0 for user simulator is dia_act level; 1 for user simulator is NL level
+`--cmd_input_mode`: 0 for NL input; 1 for Dia_Act input. (this is for AgentCmd only)
 
--write_model_dir: the directory to write the models
--trained_model_path: the trained RL agent model; load the trained model for prediction purpose.
+`--write_model_dir`: the directory to write the models
+`--trained_model_path`: the trained RL agent model; load the trained model for prediction purpose.
 
 
 ## Tutorial for Running Different Agents and User Simulators
