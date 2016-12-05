@@ -10,7 +10,7 @@ This document describes how to run the simulation and different dialogue agents 
 * [Evaluation](#evaluation)
 
 ## Data
-under this folders: ./src/deep_dialog/data
+under this folder: ./src/deep_dialog/data
 
 * Movie Knowledge Bases<br/>
 `movie_kb.1k.p` --- 94% success rate (for `user_goals_first_turn_template_subsets.v1.p`)<br/>
