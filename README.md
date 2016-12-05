@@ -6,26 +6,29 @@ under this folders: ./src/deep_dialog/data
 * Movie Knowledge Bases
 > movie_kb.1k.p --- 94% success rate (for user_goals_first_turn_template_subsets.v1.p)
 > movie_kb.v2.p --- 36% success rate (for user_goals_first_turn_template_subsets.v1.p)
+
 * User Goals
 > user_goals_first_turn_template.v2.p --- first turn
-> user_goals_first_turn_template.part.movie.v1.p --- a subset of user goal _[Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]_
+> user_goals_first_turn_template.part.movie.v1.p --- a subset of user goal [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
 
 * NLG Rule Template
 > dia_act_nl_pairs.v6.json --- some predefined NLG rule templates for both User simulator and Agent.
+
 * Dialog Act Intent
 > dia_acts.txt
+
 * Dialog Act Slot
 > slot_set.txt
 
 ## Parameter
 
 -agt: the agent id
--usr: the user (simulator) id
--max_turn: maximum turns
--episodes: how many dialogues you want to run
--slot_err_prob: slot level err probability
--slot_err_mode: which kind of slot err mode
--intent_err_prob: intent level err probability
+> -usr: the user (simulator) id
+> -max_turn: maximum turns
+> -episodes: how many dialogues you want to run
+> -slot_err_prob: slot level err probability
+> -slot_err_mode: which kind of slot err mode
+> -intent_err_prob: intent level err probability
 
 -movie_kb_path: the movie kb path for agent side
 -goal_file_path: the user goal file path for user simulator side
@@ -49,7 +52,7 @@ under this folders: ./src/deep_dialog/data
 ## Tutorial for Running Different Agents and User Simulators
 
 ### Rule Agent
-```python
+```sh
 python run.py --agt 5 
               --usr 1
 	      --max_turn 40
@@ -64,7 +67,7 @@ python run.py --agt 5
 
 ### Cmd Agent
 NL Input:
-```python
+```sh
 python run.py --agt 0
               --usr 1
 	      --max_turn 40
@@ -79,7 +82,7 @@ python run.py --agt 0
 	      --cmd_input_mode 0
 ```
 Dia_Act Input
-```python
+```sh
 python run.py --agt 0
 	      --usr 1
 	      --max_turn 40
@@ -95,7 +98,7 @@ python run.py --agt 0
 ```
 Train RL Agent
 [End2End without NLU and NLG, with simulated noise in NLU]
-```python
+```sh
 python run.py --agt 9
 	      --usr 1
 	      --max_turn 40
@@ -115,7 +118,7 @@ python run.py --agt 9
 	      --warm_start_epochs 120
 ```
 [End2End with NLU and NLG]
-```python
+```sh
 python run.py --agt 9
 	      --usr 1
 	      --max_turn 40
@@ -135,7 +138,7 @@ python run.py --agt 9
 	      --warm_start_epochs 120
 ```
 Test RL Agent with N dialogues:
-```python
+```sh
 python run.py --agt 9
 	      --usr 1
 	      --max_turn 40
