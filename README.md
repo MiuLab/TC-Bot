@@ -1,5 +1,7 @@
 # User Simulation
 This document describes how to run the simulation and agents (rule, command line, RL).
+Please refer to this paper for the detail.
+
 ## Data
 under this folders: ./src/deep_dialog/data
 
