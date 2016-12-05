@@ -180,6 +180,7 @@ python run.py --agt 9 --usr 1 --max_turn 40
 ```
 
 ## Evaluation
+To evaluate the performance of agents, three metrics are available: success rate, average reward, average turns. Here we show the learning curve with success rate.
 1. Plotting Learning Curve
 ``` python draw_learning_curve.py --result_file ./deep_dialog/checkpoints/rl_agent/noe2e/agt_9_performance_records.json```
 2. Pull out the numbers and draw the curves in Excel
