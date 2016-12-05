@@ -17,8 +17,8 @@ under this folder: ./src/deep_dialog/data
 `movie_kb.v2.p` --- 36% success rate (for `user_goals_first_turn_template_subsets.v1.p`)
 
 * User Goals<br/>
-`user_goals_first_turn_template.v2.p` --- first turn<br/>
-`user_goals_first_turn_template.part.movie.v1.p` --- a subset of user goal [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
+`user_goals_first_turn_template.v2.p` --- user goals extracted from the first user turn<br/>
+`user_goals_first_turn_template.part.movie.v1.p` --- a subset of user goals [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
 
 * NLG Rule Template<br/>
 `dia_act_nl_pairs.v6.json` --- some predefined NLG rule templates for both User simulator and Agent.
@@ -39,7 +39,7 @@ under this folder: ./src/deep_dialog/data
 
 `--max_turn`: maximum turns
 
-`--episodes`: how many dialogues you want to run
+`--episodes`: how many dialogues to run
 
 `--slot_err_prob`: slot level err probability
 
@@ -80,7 +80,7 @@ under this folder: ./src/deep_dialog/data
 
 `--write_model_dir`: the directory to write the models
 
-`--trained_model_path`: the trained RL agent model; load the trained model for prediction purpose.
+`--trained_model_path`: the path of the trained RL agent model; load the trained model for prediction purpose.
 
 
 ## Running Dialogue Agent
