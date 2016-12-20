@@ -1,5 +1,5 @@
 # User Simulation for Task Completion Dialogues
-*An implementation of the dialogue agents and user simulation [A User Simulator for Task-Completion Dialogues, Li et al. (2016): [https://arxiv.org/abs/1612.05688](https://arxiv.org/abs/1612.05688)].*
+*An implementation of the dialogue agents and user simulation [A User Simulator for Task-Completion Dialogues: [https://arxiv.org/abs/1612.05688](https://arxiv.org/abs/1612.05688)].*
 
 This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning). More instructions to plug in your customized agents or user simulators are in the Recipe section of the paper.
 
