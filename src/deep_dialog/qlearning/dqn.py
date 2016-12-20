@@ -38,8 +38,7 @@ class DQN:
         Wxh = self.model['Wxh']
         bxh = self.model['bxh']
         Xsh = Xs.dot(Wxh) + bxh
-           
-        # recurrence iteration in RNN
+        
         hidden_size = self.model['Wd'].shape[0] # size of hidden layer
         H = np.zeros((1, hidden_size)) # hidden layer representation
         
