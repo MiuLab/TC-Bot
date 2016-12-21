@@ -160,7 +160,7 @@ python run.py --agt 9 --usr 1 --max_turn 40
 	      --intent_err_prob 0.00
 	      --batch_size 16
 	      --goal_file_path ./deep_dialog/data/user_goals_first_turn_template.part.movie.v1.p
-	      --trained_model_path ./deep_dialog/checkpoints/rl_agent/noe2e/agt_9_400_420_0.90000.p
+	      --trained_model_path ./deep_dialog/checkpoints/rl_agent/noe2e/agt_9_478_500_0.98000.p
 	      --run_mode 3
 ```
 
