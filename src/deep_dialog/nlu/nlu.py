@@ -95,7 +95,7 @@ class nlu:
         words = tmp.lower().split(' ')
     
         diaact = {}
-        diaact['diaact'] = "UNK"
+        diaact['diaact'] = "thanks"
         diaact['request_slots'] = {}
         diaact['inform_slots'] = {}
         
