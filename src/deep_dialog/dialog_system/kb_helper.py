@@ -5,6 +5,7 @@ Created on May 18, 2016
 """
 
 import copy
+from collections import defaultdict
 from deep_dialog import dialog_config
 
 class KBHelper:
@@ -14,6 +15,9 @@ class KBHelper:
         """ Constructor for a KBHelper """
         
         self.movie_dictionary = movie_dictionary
+        self.cached_kb = defaultdict(list)
+        self.cached_kb_slot = defaultdict(list)
+
 
     def fill_inform_slots(self, inform_slots_to_be_filled, current_slots):
         """ Takes unfilled inform slots and current_slots, returns dictionary of filled informed slots (with values)
@@ -77,21 +81,57 @@ class KBHelper:
     def available_results_from_kb(self, current_slots):
         """ Return the available movies in the movie_kb based on the current constraints """
         
-        kb_results = copy.deepcopy(self.movie_dictionary)
-        for movie_id in self.movie_dictionary.keys():
-            for slot in current_slots['inform_slots'].keys():
-                if slot == 'ticket' or slot == 'numberofpeople' or slot == 'taskcomplete' or slot == 'closing': continue
-                if current_slots['inform_slots'][slot] == dialog_config.I_DO_NOT_CARE: continue
+        ret_result = []
+        current_slots = current_slots['inform_slots']
+        constrain_keys = current_slots.keys()
 
-                if slot not in self.movie_dictionary[movie_id].keys():
-                    if movie_id in kb_results.keys():
-                        del kb_results[movie_id]
-                else:
-                    if current_slots['inform_slots'][slot].lower() != self.movie_dictionary[movie_id][slot].lower():
-                        if movie_id in kb_results.keys():
-                            del kb_results[movie_id]
+        constrain_keys = filter(lambda k : k != 'ticket' and \
+                                           k != 'numberofpeople' and \
+                                           k!= 'taskcomplete' and \
+                                           k != 'closing' , constrain_keys)
+        constrain_keys = [k for k in constrain_keys if current_slots[k] != dialog_config.I_DO_NOT_CARE]
 
-        return kb_results
+        query_idx_keys = frozenset(current_slots.items())
+        cached_kb_ret = self.cached_kb[query_idx_keys]
+
+        cached_kb_length = len(cached_kb_ret) if cached_kb_ret != None else -1
+        if cached_kb_length > 0:
+            return dict(cached_kb_ret)
+        elif cached_kb_length == -1:
+            return dict([])
+
+        # kb_results = copy.deepcopy(self.movie_dictionary)
+        for id in self.movie_dictionary.keys():
+            kb_keys = self.movie_dictionary[id].keys()
+            if len(set(constrain_keys).union(set(kb_keys)) ^ (set(constrain_keys) ^ set(kb_keys))) == len(
+                    constrain_keys):
+                match = True
+                for idx, k in enumerate(constrain_keys):
+                    if str(current_slots[k]).lower() == str(self.movie_dictionary[id][k]).lower():
+                        continue
+                    else:
+                        match = False
+                if match:
+                    self.cached_kb[query_idx_keys].append((id, self.movie_dictionary[id]))
+                    ret_result.append((id, self.movie_dictionary[id]))
+
+            # for slot in current_slots['inform_slots'].keys():
+            #     if slot == 'ticket' or slot == 'numberofpeople' or slot == 'taskcomplete' or slot == 'closing': continue
+            #     if current_slots['inform_slots'][slot] == dialog_config.I_DO_NOT_CARE: continue
+            #
+            #     if slot not in self.movie_dictionary[movie_id].keys():
+            #         if movie_id in kb_results.keys():
+            #             del kb_results[movie_id]
+            #     else:
+            #         if current_slots['inform_slots'][slot].lower() != self.movie_dictionary[movie_id][slot].lower():
+            #             if movie_id in kb_results.keys():
+            #                 del kb_results[movie_id]
+            
+        if len(ret_result) == 0:
+            self.cached_kb[query_idx_keys] = None
+
+        ret_result = dict(ret_result)
+        return ret_result
     
     def available_results_from_kb_for_slots(self, inform_slots):
         """ Return the count statistics for each constraint in inform_slots """
@@ -99,6 +139,12 @@ class KBHelper:
         kb_results = {key:0 for key in inform_slots.keys()}
         kb_results['matching_all_constraints'] = 0
         
+        query_idx_keys = frozenset(inform_slots.items())
+        cached_kb_slot_ret = self.cached_kb_slot[query_idx_keys]
+
+        if len(cached_kb_slot_ret) > 0:
+            return cached_kb_slot_ret[0]
+
         for movie_id in self.movie_dictionary.keys():
             all_slots_match = 1
             for slot in inform_slots.keys():
@@ -114,6 +160,7 @@ class KBHelper:
                     all_slots_match = 0
             kb_results['matching_all_constraints'] += all_slots_match
 
+        self.cached_kb_slot[query_idx_keys].append(kb_results)
         return kb_results
 
     
