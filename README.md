@@ -1,7 +1,7 @@
 # End-to-End Task-Completion Neural Dialogue Systems
 *An implementation of the  
-[End-to-End Task-Completion Neural Dialogue Systems] (http://arxiv.org/abs/1703.01008) and
-[A User Simulator for Task-Completion Dialogues] (https://arxiv.org/abs/1612.05688)].*
+[End-to-End Task-Completion Neural Dialogue Systems](http://arxiv.org/abs/1703.01008) and
+[A User Simulator for Task-Completion Dialogues](http://arxiv.org/abs/1612.05688)].*
 
 This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning). More instructions to plug in your customized agents or user simulators are in the Recipe section of the paper.
 
@@ -10,6 +10,7 @@ This document describes how to run the simulation and different dialogue agents 
 * [Parameter](#parameter)
 * [Running Dialogue Agents](#running-dialogue-agents)
 * [Evaluation](#evaluation)
+* [Reference](#reference)
 
 ## Data
 all the data is under this folder: ./src/deep_dialog/data
