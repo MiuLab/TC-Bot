@@ -30,7 +30,7 @@ class UserSimulator:
     def initialize_episode(self):
         """ Initialize a new episode (dialog)"""
 
-        print "initialize episode called, generating goal"
+        print("initialize episode called, generating goal")
         self.goal =  random.choice(self.start_set)
         self.goal['request_slots']['ticket'] = 'UNK'
         episode_over, user_action = self._sample_action()

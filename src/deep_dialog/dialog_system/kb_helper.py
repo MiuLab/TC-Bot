@@ -32,7 +32,7 @@ class KBHelper:
         
         kb_results = self.available_results_from_kb(current_slots)
         if dialog_config.auto_suggest == 1:
-            print 'Number of movies in KB satisfying current constraints: ', len(kb_results)
+            print('Number of movies in KB satisfying current constraints: ', len(kb_results))
 
         filled_in_slots = {}
         if 'taskcomplete' in inform_slots_to_be_filled.keys():
@@ -85,10 +85,10 @@ class KBHelper:
         current_slots = current_slots['inform_slots']
         constrain_keys = current_slots.keys()
 
-        constrain_keys = filter(lambda k : k != 'ticket' and \
+        constrain_keys = [k for k in constrain_keys if k != 'ticket' and \
                                            k != 'numberofpeople' and \
                                            k!= 'taskcomplete' and \
-                                           k != 'closing' , constrain_keys)
+                                           k != 'closing']
         constrain_keys = [k for k in constrain_keys if current_slots[k] != dialog_config.I_DO_NOT_CARE]
 
         query_idx_keys = frozenset(current_slots.items())

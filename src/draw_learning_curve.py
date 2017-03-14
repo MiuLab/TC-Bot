@@ -67,6 +67,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     params = vars(args)
-    print json.dumps(params, indent=2)
+    print(json.dumps(params, indent=2))
 
     main(params)

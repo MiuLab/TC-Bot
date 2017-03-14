@@ -52,7 +52,7 @@ class lstm_decoder_tanh(decoder):
         Cellin = np.zeros((n, d))
         Cellout = np.zeros((n, d))
     
-        for t in xrange(n):
+        for t in range(n):
             prev = np.zeros(d) if t==0 else Hout[t-1]
             Hin[t,0] = 1 # bias
             Hin[t, 1:1+xd] = Ws[t]
@@ -343,7 +343,7 @@ class lstm_decoder_tanh(decoder):
         
         dDsh = np.zeros(Dsh.shape)
         
-        for t in reversed(xrange(n)):
+        for t in reversed(range(n)):
             dIFOGf[t,2*d:3*d] = Cellout[t] * dHout[t]
             dCellout[t] = IFOGf[t,2*d:3*d] * dHout[t]
             

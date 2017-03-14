@@ -43,7 +43,7 @@ class SeqToSeq:
     def batchBackward(self, dY, cache):
         caches = cache['caches']
         grads = {}
-        for i in xrange(len(caches)):
+        for i in range(len(caches)):
             single_cache = caches[i]
             local_grads = self.bwdPass(dY[i], single_cache)
             mergeDicts(grads, local_grads) # add up the gradients wrt model parameters
@@ -72,7 +72,7 @@ class SeqToSeq:
             P = e/np.sum(e, axis=1, keepdims=True)
             
             # Cross-Entropy Cross Function
-            loss_cost += -np.sum(np.log(smooth_cost + P[range(len(labels)), labels]))
+            loss_cost += -np.sum(np.log(smooth_cost + P[list(range(len(labels))), labels]))
             
             for iy,y in enumerate(labels):
                 P[iy,y] -= 1 # softmax derivatives
@@ -161,7 +161,7 @@ class SeqToSeq:
             res_filename = 'res_%s_[%s].txt' % (params['model'], time.time())
             res_filepath = os.path.join(params['test_res_dir'], res_filename)
             res = open(res_filepath, 'w')
-            inverse_tag_dict = {ds.data['tag_set'][k]:k for k in ds.data['tag_set'].keys()}
+            inverse_tag_dict = {ds.data['tag_set'][k]:k for k in list(ds.data['tag_set'].keys())}
             
         for i, ele in enumerate(ds.split[split]):
             Ys, cache = self.fwdPass(ele, params, predict_model=True)
@@ -175,7 +175,7 @@ class SeqToSeq:
             if np.all(np.isnan(probs)): probs = np.zeros(probs.shape)
             
             loss_cost = 0
-            loss_cost += -np.sum(np.log(smooth_cost + probs[range(len(labels)), labels]))
+            loss_cost += -np.sum(np.log(smooth_cost + probs[list(range(len(labels))), labels]))
             total_cost += loss_cost
             
             pred_words_indices = np.nanargmax(probs, axis=1)

@@ -20,8 +20,8 @@ class Agent:
         self.movie_dict = movie_dict
         self.act_set = act_set
         self.slot_set = slot_set
-        self.act_cardinality = len(act_set.keys())
-        self.slot_cardinality = len(slot_set.keys())
+        self.act_cardinality = len(list(act_set.keys()))
+        self.slot_cardinality = len(list(slot_set.keys()))
         
         self.epsilon = params['epsilon']
         self.agent_run_mode = params['agent_run_mode']

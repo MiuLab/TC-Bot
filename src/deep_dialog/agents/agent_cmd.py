@@ -5,7 +5,7 @@ Created on May 17, 2016
 """
 
 
-from agent import Agent
+from .agent import Agent
 
 class AgentCmd(Agent):
     
@@ -15,8 +15,8 @@ class AgentCmd(Agent):
         self.movie_dict = movie_dict
         self.act_set = act_set
         self.slot_set = slot_set
-        self.act_cardinality = len(act_set.keys())
-        self.slot_cardinality = len(slot_set.keys())
+        self.act_cardinality = len(list(act_set.keys()))
+        self.slot_cardinality = len(list(slot_set.keys()))
         
         self.agent_run_mode = params['agent_run_mode']
         self.agent_act_level = params['agent_act_level']
@@ -28,8 +28,8 @@ class AgentCmd(Agent):
 
         user_action = state['user_action']
         # get input from the command line
-        print "Turn", user_action['turn'] + 1, "sys:",
-        command = raw_input()
+        print("Turn", user_action['turn'] + 1, "sys:", end=' ')
+        command = input()
         
         if self.agent_input_mode == 0: # nl
             act_slot_value_response = self.generate_diaact_from_nl(command)

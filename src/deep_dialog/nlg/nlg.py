@@ -7,7 +7,7 @@ Created on Oct 17, 2016
 @author: xiul
 '''
 
-import cPickle as pickle
+import pickle
 import copy, argparse, json
 import numpy as np
 
@@ -54,8 +54,10 @@ class nlg:
         boolean_in = False
         
         # remove I do not care slot in task(complete)
-        if dia_act['diaact'] == 'inform' and 'taskcomplete' in dia_act['inform_slots'].keys() and dia_act['inform_slots']['taskcomplete'] != dialog_config.NO_VALUE_MATCH:
-            inform_slot_set = dia_act['inform_slots'].keys()
+        if dia_act['diaact'] == 'inform' \
+                and 'taskcomplete' in dia_act['inform_slots'].keys() \
+                and dia_act['inform_slots']['taskcomplete'] != dialog_config.NO_VALUE_MATCH:
+            inform_slot_set = list(dia_act['inform_slots'].keys())
             for slot in inform_slot_set:
                 if dia_act['inform_slots'][slot] == dialog_config.I_DO_NOT_CARE: del dia_act['inform_slots'][slot]
         
@@ -201,7 +203,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     params = vars(args)
 
-    print ("User Simulator Parameters:")
-    print (json.dumps(params, indent=2))
+    print("User Simulator Parameters:")
+    print(json.dumps(params, indent=2))
 
     main(params)
