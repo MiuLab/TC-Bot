@@ -1,5 +1,7 @@
-# User Simulation for Task Completion Dialogues
-*An implementation of the dialogue agents and user simulation [A User Simulator for Task-Completion Dialogues: [https://arxiv.org/abs/1612.05688](https://arxiv.org/abs/1612.05688)].*
+# End-to-End Task-Completion Neural Dialogue Systems
+*An implementation of the  
+[End-to-End Task-Completion Neural Dialogue Systems] (http://arxiv.org/abs/1703.01008) and
+[A User Simulator for Task-Completion Dialogues] (https://arxiv.org/abs/1612.05688)].*
 
 This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning). More instructions to plug in your customized agents or user simulators are in the Recipe section of the paper.
 
@@ -170,3 +172,21 @@ To evaluate the performance of agents, three metrics are available: success rate
 1. Plotting Learning Curve
 ``` python draw_learning_curve.py --result_file ./deep_dialog/checkpoints/rl_agent/noe2e/agt_9_performance_records.json```
 2. Pull out the numbers and draw the curves in Excel
+
+## Reference
+
+Main papers to be cited
+```
+@article{li2017end,
+  title={End-to-End Task-Completion Neural Dialogue Systems},
+  author={Li, Xuijun and Chen, Yun-Nung and Li, Lihong and Gao, Jianfeng},
+  journal={arXiv preprint arXiv:1703.01008},
+  year={2017}
+}
+
+@article{li2016user,
+  title={A User Simulator for Task-Completion Dialogues},
+  author={Li, Xiujun and Lipton, Zachary C and Dhingra, Bhuwan and Li, Lihong and Gao, Jianfeng and Chen, Yun-Nung},
+  journal={arXiv preprint arXiv:1612.05688},
+  year={2016}
+}
