@@ -6,7 +6,8 @@ draw a learning curve
 @author: xiul
 """
 
-import argparse, json
+import argparse
+import json
 import matplotlib.pyplot as plt
 
 
