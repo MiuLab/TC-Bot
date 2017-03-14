@@ -26,19 +26,19 @@ RL: python run.py --agt 9 --usr 1 --max_turn 40 --movie_kb_path .\deep_dialog\da
 @author: xiul, t-zalipt
 """
 
-import argparse, json, copy, os
+import argparse
+import copy
+import json
+import os
 import pickle
 
-from .deep_dialog.dialog_system import DialogManager, text_to_dict
+from .deep_dialog import dialog_config
 from .deep_dialog.agents import AgentCmd, InformAgent, RequestAllAgent, RandomAgent, EchoAgent, RequestBasicsAgent, \
     AgentDQN
-from .deep_dialog.usersims import RuleSimulator
-
-from .deep_dialog import dialog_config
-from .deep_dialog.dialog_config import *
-
-from .deep_dialog.nlu import nlu
+from .deep_dialog.dialog_system import DialogManager, text_to_dict
 from .deep_dialog.nlg import nlg
+from .deep_dialog.nlu import nlu
+from .deep_dialog.usersims import RuleSimulator
 
 """
 Launch a dialog simulation per the command line arguments
@@ -160,20 +160,18 @@ dialog_config.auto_suggest = params['auto_suggest']
 ################################################################################
 #   Parameters for Agents
 ################################################################################
-agent_params = {}
-agent_params['max_turn'] = max_turn
-agent_params['epsilon'] = params['epsilon']
-agent_params['agent_run_mode'] = params['run_mode']
-agent_params['agent_act_level'] = params['act_level']
-
-agent_params['experience_replay_pool_size'] = params['experience_replay_pool_size']
-agent_params['dqn_hidden_size'] = params['dqn_hidden_size']
-agent_params['batch_size'] = params['batch_size']
-agent_params['gamma'] = params['gamma']
-agent_params['predict_mode'] = params['predict_mode']
-agent_params['trained_model_path'] = params['trained_model_path']
-agent_params['warm_start'] = params['warm_start']
-agent_params['cmd_input_mode'] = params['cmd_input_mode']
+agent_params = {'max_turn': max_turn,
+                'epsilon': params['epsilon'],
+                'agent_run_mode': params['run_mode'],
+                'agent_act_level': params['act_level'],
+                'experience_replay_pool_size': params['experience_replay_pool_size'],
+                'dqn_hidden_size': params['dqn_hidden_size'],
+                'batch_size': params['batch_size'],
+                'gamma': params['gamma'],
+                'predict_mode': params['predict_mode'],
+                'trained_model_path': params['trained_model_path'],
+                'warm_start': params['warm_start'],
+                'cmd_input_mode': params['cmd_input_mode']}
 
 if agt == 0:
     agent = AgentCmd(movie_kb, act_set, slot_set, agent_params)
@@ -264,10 +262,7 @@ best_res = {'success_rate': 0, 'ave_reward': float('-inf'), 'ave_turns': float('
 best_model['model'] = copy.deepcopy(agent)
 best_res['success_rate'] = 0
 
-performance_records = {}
-performance_records['success_rate'] = {}
-performance_records['ave_turns'] = {}
-performance_records['ave_reward'] = {}
+performance_records = {'success_rate': {}, 'ave_turns': {}, 'ave_reward': {}}
 
 """ Save model """
 
@@ -312,7 +307,7 @@ def simulation_epoch(simulation_epoch_size):
     for episode in range(simulation_epoch_size):
         dialog_manager.initialize_episode()
         episode_over = False
-        while (not episode_over):
+        while not episode_over:
             episode_over, reward = dialog_manager.next_turn()
             cumulative_reward += reward
             if episode_over:
@@ -343,15 +338,15 @@ def warm_start_simulation():
     for episode in range(warm_start_epochs):
         dialog_manager.initialize_episode()
         episode_over = False
-        while (not episode_over):
+        while not episode_over:
             episode_over, reward = dialog_manager.next_turn()
             cumulative_reward += reward
             if episode_over:
                 if reward > 0:
                     successes += 1
-                    print("warm_start simulation episode %s: Success" % (episode))
+                    print("warm_start simulation episode %s: Success" % episode)
                 else:
-                    print("warm_start simulation episode %s: Fail" % (episode))
+                    print("warm_start simulation episode %s: Fail" % episode)
                 cumulative_turns += dialog_manager.state_tracker.turn_count
 
         if len(agent.experience_replay_pool) >= agent.experience_replay_pool_size:
@@ -361,8 +356,8 @@ def warm_start_simulation():
     res['success_rate'] = float(successes) / simulation_epoch_size
     res['ave_reward'] = float(cumulative_reward) / simulation_epoch_size
     res['ave_turns'] = float(cumulative_turns) / simulation_epoch_size
-    print("Warm_Start %s epochs, success rate %s, ave reward %s, ave turns %s" % (
-    episode + 1, res['success_rate'], res['ave_reward'], res['ave_turns']))
+    print("Warm_Start %s epochs, success rate %s, ave reward %s, ave turns %s"
+          % (episode + 1, res['success_rate'], res['ave_reward'], res['ave_turns']))
     print("Current experience replay buffer size %s" % (len(agent.experience_replay_pool)))
 
 
@@ -371,17 +366,17 @@ def run_episodes(count, status):
     cumulative_reward = 0
     cumulative_turns = 0
 
-    if agt == 9 and params['trained_model_path'] == None and warm_start == 1:
+    if agt == 9 and not params['trained_model_path'] and warm_start == 1:
         print('warm_start starting ...')
         warm_start_simulation()
         print('warm_start finished, start RL training ...')
 
     for episode in range(count):
-        print("Episode: %s" % (episode))
+        print("Episode: %s" % episode)
         dialog_manager.initialize_episode()
         episode_over = False
 
-        while (not episode_over):
+        while not episode_over:
             episode_over, reward = dialog_manager.next_turn()
             cumulative_reward += reward
 
@@ -395,7 +390,7 @@ def run_episodes(count, status):
                 cumulative_turns += dialog_manager.state_tracker.turn_count
 
         # simulation
-        if agt == 9 and params['trained_model_path'] == None:
+        if agt == 9 and not params['trained_model_path']:
             agent.predict_mode = True
             simulation_res = simulation_epoch(simulation_epoch_size)
 
@@ -419,9 +414,9 @@ def run_episodes(count, status):
             agent.train(batch_size, 1)
             agent.predict_mode = False
 
-            print("Simulation success rate %s, Ave reward %s, Ave turns %s, Best success rate %s" % (
-            performance_records['success_rate'][episode], performance_records['ave_reward'][episode],
-            performance_records['ave_turns'][episode], best_res['success_rate']))
+            print("Simulation success rate %s, Ave reward %s, Ave turns %s, Best success rate %s"
+                  % (performance_records['success_rate'][episode], performance_records['ave_reward'][episode],
+                     performance_records['ave_turns'][episode], best_res['success_rate']))
             if episode % save_check_point == 0 \
                     and not params['trained_model_path']:  # save the model every 10 episodes
                 save_model(params['write_model_dir'], agt, best_res['success_rate'], best_model['model'],
