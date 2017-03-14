@@ -1,15 +1,19 @@
-'''
+"""
 Created on May 17, 2016
 
 @author: xiul, t-zalipt
-'''
+"""
 
-sys_request_slots = ['moviename', 'theater', 'starttime', 'date', 'numberofpeople', 'genre', 'state', 'city', 'zip', 'critic_rating', 'mpaa_rating', 'distanceconstraints', 'video_format', 'theater_chain', 'price', 'actor', 'description', 'other', 'numberofkids']
-sys_inform_slots = ['moviename', 'theater', 'starttime', 'date', 'genre', 'state', 'city', 'zip', 'critic_rating', 'mpaa_rating', 'distanceconstraints', 'video_format', 'theater_chain', 'price', 'actor', 'description', 'other', 'numberofkids', 'taskcomplete', 'ticket']
+sys_request_slots = ['moviename', 'theater', 'starttime', 'date', 'numberofpeople', 'genre', 'state', 'city', 'zip',
+                     'critic_rating', 'mpaa_rating', 'distanceconstraints', 'video_format', 'theater_chain', 'price',
+                     'actor', 'description', 'other', 'numberofkids']
+sys_inform_slots = ['moviename', 'theater', 'starttime', 'date', 'genre', 'state', 'city', 'zip', 'critic_rating',
+                    'mpaa_rating', 'distanceconstraints', 'video_format', 'theater_chain', 'price', 'actor',
+                    'description', 'other', 'numberofkids', 'taskcomplete', 'ticket']
 
 start_dia_acts = {
-    #'greeting':[],
-    'request':['moviename', 'starttime', 'theater', 'city', 'state', 'date', 'genre', 'ticket', 'numberofpeople']
+    # 'greeting':[],
+    'request': ['moviename', 'starttime', 'theater', 'city', 'state', 'date', 'genre', 'ticket', 'numberofpeople']
 }
 
 ################################################################################
@@ -55,32 +59,32 @@ feasible_actions = [
     ############################################################################
     #   greeting actions
     ############################################################################
-    #{'diaact':"greeting", 'inform_slots':{}, 'request_slots':{}},
+    # {'diaact':"greeting", 'inform_slots':{}, 'request_slots':{}},
     ############################################################################
     #   confirm_question actions
     ############################################################################
-    {'diaact':"confirm_question", 'inform_slots':{}, 'request_slots':{}},
+    {'diaact': "confirm_question", 'inform_slots': {}, 'request_slots': {}},
     ############################################################################
     #   confirm_answer actions
     ############################################################################
-    {'diaact':"confirm_answer", 'inform_slots':{}, 'request_slots':{}},
+    {'diaact': "confirm_answer", 'inform_slots': {}, 'request_slots': {}},
     ############################################################################
     #   thanks actions
     ############################################################################
-    {'diaact':"thanks", 'inform_slots':{}, 'request_slots':{}},
+    {'diaact': "thanks", 'inform_slots': {}, 'request_slots': {}},
     ############################################################################
     #   deny actions
     ############################################################################
-    {'diaact':"deny", 'inform_slots':{}, 'request_slots':{}},
+    {'diaact': "deny", 'inform_slots': {}, 'request_slots': {}},
 ]
 ############################################################################
 #   Adding the inform actions
 ############################################################################
 for slot in sys_inform_slots:
-    feasible_actions.append({'diaact':'inform', 'inform_slots':{slot:"PLACEHOLDER"}, 'request_slots':{}})
+    feasible_actions.append({'diaact': 'inform', 'inform_slots': {slot: "PLACEHOLDER"}, 'request_slots': {}})
 
 ############################################################################
 #   Adding the request actions
 ############################################################################
 for slot in sys_request_slots:
-    feasible_actions.append({'diaact':'request', 'inform_slots':{}, 'request_slots': {slot: "UNK"}})
+    feasible_actions.append({'diaact': 'request', 'inform_slots': {}, 'request_slots': {slot: "UNK"}})
