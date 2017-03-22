@@ -1,9 +1,11 @@
 """
 Created on May 22, 2016
 
-This should be a simple minimalist run file. It's only responsibility should be to parse the arguments (which agent, user simulator to use) and launch a dialog simulation.
+This should be a simple minimalist run file. It's only responsibility should be to parse the arguments (which agent,
+user simulator to use) and launch a dialog simulation.
 
-Rule-agent: python run.py --agt 6 --usr 1 --max_turn 40 --episodes 150 --movie_kb_path .\deep_dialog\data\movie_kb.1k.p --run_mode 2
+Rule-agent: python run.py --agt 6 --usr 1 --max_turn 40 --episodes 150 --movie_kb_path ./deep_dialog/data/movie_kb.1k.p
+--run_mode 2
 
 movie_kb:
 movie_kb.1k.p: 94% success rate
@@ -12,16 +14,27 @@ movie_kb.v2.p: 36% success rate
 user goal files:
 first turn: user_goals_first_turn_template.v2.p
 all turns: user_goals_all_turns_template.p
-user_goals_first_turn_template.part.movie.v1.p: a subset of user goal. [Please use this one, the upper bound success rate on movie_kb.1k.json is 0.9765.]
+user_goals_first_turn_template.part.movie.v1.p: a subset of user goal. [Please use this one, the upper bound success
+rate on movie_kb.1k.json is 0.9765.]
 
 Commands:
-Rule: python run.py --agt 5 --usr 1 --max_turn 40 --episodes 150 --movie_kb_path .\deep_dialog\data\movie_kb.1k.p --goal_file_path .\deep_dialog\data\user_goals_first_turn_template.part.movie.v1.p --intent_err_prob 0.00 --slot_err_prob 0.00 --episodes 500 --act_level 1 --run_mode 1
+Rule: python run.py --agt 5 --usr 1 --max_turn 40 --episodes 150 --movie_kb_path ./deep_dialog/data/movie_kb.1k.p
+--goal_file_path ./deep_dialog/data/user_goals_first_turn_template.part.movie.v1.p --intent_err_prob 0.00
+--slot_err_prob 0.00 --episodes 500 --act_level 1 --run_mode 1
 
 Training:
-RL: python run.py --agt 9 --usr 1 --max_turn 40 --movie_kb_path .\deep_dialog\data\movie_kb.1k.p --dqn_hidden_size 80 --experience_replay_pool_size 1000 --episodes 500 --simulation_epoch_size 100 --write_model_dir .\deep_dialog\checkpoints\rl_agent\ --run_mode 3 --act_level 0 --slot_err_prob 0.05 --intent_err_prob 0.00 --batch_size 16 --goal_file_path .\deep_dialog\data\user_goals_first_turn_template.part.movie.v1.p --warm_start 1 --warm_start_epochs 120
+RL: python run.py --agt 9 --usr 1 --max_turn 40 --movie_kb_path ./deep_dialog/data/movie_kb.1k.p --dqn_hidden_size 80
+--experience_replay_pool_size 1000 --episodes 500 --simulation_epoch_size 100 --write_model_dir
+./deep_dialog/checkpoints/rl_agent --run_mode 3 --act_level 0 --slot_err_prob 0.05 --intent_err_prob 0.00
+--batch_size 16 --goal_file_path ./deep_dialog/data/user_goals_first_turn_template.part.movie.v1.p --warm_start 1
+--warm_start_epochs 120
 
 Predict:
-RL: python run.py --agt 9 --usr 1 --max_turn 40 --movie_kb_path .\deep_dialog\data\movie_kb.1k.p --dqn_hidden_size 80 --experience_replay_pool_size 1000 --episodes 300 --simulation_epoch_size 100 --write_model_dir .\deep_dialog\checkpoints\rl_agent\ --slot_err_prob 0.00 --intent_err_prob 0.00 --batch_size 16 --goal_file_path .\deep_dialog\data\user_goals_first_turn_template.part.movie.v1.p --episodes 200 --trained_model_path .\deep_dialog\checkpoints\rl_agent\agt_9_22_30_0.37000.p --run_mode 3
+RL: python run.py --agt 9 --usr 1 --max_turn 40 --movie_kb_path ./deep_dialog/data/movie_kb.1k.p --dqn_hidden_size 80
+--experience_replay_pool_size 1000 --episodes 300 --simulation_epoch_size 100 --write_model_dir
+./deep_dialog/checkpoints/rl_agent --slot_err_prob 0.00 --intent_err_prob 0.00 --batch_size 16 --goal_file_path
+./deep_dialog/data/user_goals_first_turn_template.part.movie.v1.p --episodes 200 --trained_model_path
+./deep_dialog/checkpoints/rl_agent/agt_9_22_30_0.37000.p --run_mode 3
 
 @author: xiul, t-zalipt
 """
@@ -32,19 +45,29 @@ import json
 import os
 import pickle
 
-from .deep_dialog import dialog_config
-from .deep_dialog.agents import AgentCmd, InformAgent, RequestAllAgent, RandomAgent, EchoAgent, RequestBasicsAgent, \
-    AgentDQN
-from .deep_dialog.dialog_system import DialogManager, text_to_dict
-from .deep_dialog.nlg import nlg
-from .deep_dialog.nlu import nlu
-from .deep_dialog.usersims import RuleSimulator
+from src.deep_dialog import dialog_config
+from src.deep_dialog.agents import AgentCmd, InformAgent, RequestAllAgent, RandomAgent, \
+                                   EchoAgent, RequestBasicsAgent, AgentDQN
+from src.deep_dialog.dialog_system import DialogManager, text_to_dict
+from src.deep_dialog.nlg import nlg
+from src.deep_dialog.nlu import nlu
+from src.deep_dialog.usersims import RuleSimulator
 
 """
 Launch a dialog simulation per the command line arguments
 This function instantiates a user_simulator, an agent, and a dialog system.
 Next, it triggers the simulator to run for the specified number of episodes.
 """
+
+
+def load_file(file_name):
+    try:
+        with open(file_name, 'rb') as f:
+            obj = pickle.load(f)
+    except (UnicodeDecodeError, pickle.UnpicklingError):
+        with open(file_name, "rt") as f:
+            obj = json.load(f)
+    return obj
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -85,7 +108,7 @@ if __name__ == "__main__":
 
     # load NLG & NLU model
     parser.add_argument('--nlg_model_path', dest='nlg_model_path', type=str,
-                        default='./deep_dialog/models/nlg/lstm_tanh_relu_[1468202263.38]_2_0.610.p',
+                        default='./deep_dialog/models/nlg/lstm_tanh_relu_[1468202263.38]_2_0.610.pkl',
                         help='path to model file')
     parser.add_argument('--nlu_model_path', dest='nlu_model_path', type=str,
                         default='./deep_dialog/models/nlu/lstm_[1468447442.91]_39_80_0.921.p',
@@ -141,10 +164,10 @@ dict_path = params['dict_path']
 goal_file_path = params['goal_file_path']
 
 # load the user goals from .p file
-goal_set = pickle.load(open(goal_file_path, 'rb'))
+goal_set = load_file(goal_file_path)
 
 movie_kb_path = params['movie_kb_path']
-movie_kb = pickle.load(open(movie_kb_path, 'rb'))
+movie_kb = load_file(movie_kb_path)
 
 act_set = text_to_dict(params['act_set'])
 slot_set = text_to_dict(params['slot_set'])
@@ -152,7 +175,7 @@ slot_set = text_to_dict(params['slot_set'])
 ################################################################################
 # a movie dictionary for user simulator - slot:possible values
 ################################################################################
-movie_dictionary = pickle.load(open(dict_path, 'rb'))
+movie_dictionary = load_file(dict_path)
 
 dialog_config.run_mode = params['run_mode']
 dialog_config.auto_suggest = params['auto_suggest']
@@ -264,10 +287,10 @@ best_res['success_rate'] = 0
 
 performance_records = {'success_rate': {}, 'ave_turns': {}, 'ave_reward': {}}
 
-""" Save model """
-
 
 def save_model(path, agt, success_rate, agent, best_epoch, cur_epoch):
+    """ Save model """
+
     filename = 'agt_%s_%s_%s_%.5f.p' % (agt, best_epoch, cur_epoch, success_rate)
     filepath = os.path.join(path, filename)
     checkpoint = {}
