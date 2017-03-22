@@ -1,33 +1,32 @@
-'''
+"""
 Created on Jun 13, 2016
 
 @author: xiul
-'''
+"""
 
 from .utils import *
 
 
-class decoder:
+class Decoder:
     def __init__(self, input_size, hidden_size, output_size):
         pass
     
     def get_struct(self):
         return {'model': self.model, 'update': self.update, 'regularize': self.regularize}
-    
-    
-    """ Activation Function: Sigmoid, or tanh, or ReLu"""
+
     def fwdPass(self, Xs, params, **kwargs):
+        """ Activation Function: Sigmoid, or tanh, or ReLu"""
         pass
     
     def bwdPass(self, dY, cache):
         pass
-    
-    
-    """ Batch Forward & Backward Pass"""
-    def batchForward(self, ds, batch, params, predict_mode = False):
+
+    def batchForward(self, ds, batch, params, predict_mode=False):
+        """ Batch Forward & Backward Pass"""
+
         caches = []
         Ys = []
-        for i,x in enumerate(batch):
+        for i, x in enumerate(batch):
             Y, out_cache = self.fwdPass(x, params, predict_mode = predict_mode)
             caches.append(out_cache)
             Ys.append(Y)
@@ -49,9 +48,9 @@ class decoder:
             
         return grads
 
-
-    """ Cost function, returns cost and gradients for model """
     def costFunc(self, ds, batch, params):
+        """ Cost function, returns cost and gradients for model """
+
         regc = params['reg_cost'] # regularization cost
         
         # batch forward RNN
@@ -99,9 +98,9 @@ class decoder:
         out['grads'] = grads
         return out
 
-
-    """ A single batch """
     def singleBatch(self, ds, batch, params):
+        """ A single batch """
+
         learning_rate = params.get('learning_rate', 0.0)
         decay_rate = params.get('decay_rate', 0.999)
         momentum = params.get('momentum', 0)
@@ -147,9 +146,9 @@ class decoder:
         out['cost'] = cost
         return out
     
-    
-    """ Evaluate on the dataset[split] """
     def eval(self, ds, split, params):
+        """ Evaluate on the dataset[split] """
+
         acc = 0
         total = 0
         
@@ -196,11 +195,10 @@ class decoder:
         #print ("perplexity: %s, total_cost: %s, accuracy: %s" % (perplexity, total_cost, accuracy))
         result = {'perplexity': perplexity, 'cost': total_cost, 'accuracy': accuracy}
         return result
-    
-    
-         
-    """ prediction on dataset[split] """
+
     def predict(self, ds, split, params):
+        """ prediction on dataset[split] """
+
         inverse_word_dict = {ds.data['word_dict'][k]:k for k in ds.data['word_dict'].keys()}
         for i, ele in enumerate(ds.split[split]):
             pred_ys, pred_words = self.forward(inverse_word_dict, ele, params, predict_model=True)
@@ -215,8 +213,8 @@ class decoder:
             print('real:', real_sentence)
             print('pred:', sentence)
     
-    """ post_process to fill the slot """
     def post_process(self, pred_template, slot_val_dict, slot_dict):
+        """ post_process to fill the slot """
         sentence = pred_template
         suffix = "_PLACEHOLDER"
         
