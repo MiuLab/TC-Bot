@@ -1,8 +1,8 @@
-'''
+"""
 Created on Jun 13, 2016
 
 @author: xiul
-'''
+"""
 
 from .utils import *
 import time, os
@@ -14,18 +14,18 @@ class SeqToSeq:
     
     def get_struct(self):
         return {'model': self.model, 'update': self.update, 'regularize': self.regularize}
-    
-    
-    """ Forward Function"""
+
     def fwdPass(self, Xs, params, **kwargs):
+        """ Forward Function"""
+
         pass
     
     def bwdPass(self, dY, cache):
         pass
-    
-    
-    """ Batch Forward & Backward Pass"""
+
     def batchForward(self, ds, batch, params, predict_mode = False):
+        """ Batch Forward & Backward Pass"""
+
         caches = []
         Ys = []
         for i,x in enumerate(batch):
@@ -51,9 +51,10 @@ class SeqToSeq:
         return grads
 
 
-    """ Cost function, returns cost and gradients for model """
     def costFunc(self, ds, batch, params):
-        regc = params['reg_cost'] # regularization cost
+        """ Cost function, returns cost and gradients for model """
+
+        regc = params['reg_cost']  # regularization cost
         
         # batch forward RNN
         Ys, caches = self.batchForward(ds, batch, params, predict_mode = False)
@@ -101,8 +102,9 @@ class SeqToSeq:
         return out
 
 
-    """ A single batch """
     def singleBatch(self, ds, batch, params):
+        """ A single batch """
+
         learning_rate = params.get('learning_rate', 0.0)
         decay_rate = params.get('decay_rate', 0.999)
         momentum = params.get('momentum', 0)
@@ -147,10 +149,10 @@ class SeqToSeq:
         out = {}
         out['cost'] = cost
         return out
-    
-    
-    """ Evaluate on the dataset[split] """
+
     def eval(self, ds, split, params):
+        """ Evaluate on the dataset[split] """
+
         acc = 0
         total = 0
         
@@ -193,6 +195,6 @@ class SeqToSeq:
         total_cost /= len(ds.split[split])
         accuracy = 0 if total == 0 else float(acc)/total
         
-        #print ("total_cost: %s, accuracy: %s" % (total_cost, accuracy))
+        # print ("total_cost: %s, accuracy: %s" % (total_cost, accuracy))
         result = {'cost': total_cost, 'accuracy': accuracy}
         return result
