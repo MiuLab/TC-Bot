@@ -23,7 +23,7 @@ class nlu:
             tmp_annot = annot.strip('.').strip('?').strip(',').strip('!')
 
             rep = self.parse_str_to_vector(tmp_annot)
-            Ys, cache = self.model.fwdPass(rep, self.params, predict_model=True)  # default: True
+            Ys, cache = self.model.fwdPass(rep, self.params, predict_mode=True)  # default: True
 
             maxes = np.amax(Ys, axis=1, keepdims=True)
             e = np.exp(Ys - maxes)  # for numerical stability shift into good numerical range
