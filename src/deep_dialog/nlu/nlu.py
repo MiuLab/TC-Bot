@@ -163,11 +163,11 @@ class nlu:
         # rule for taskcomplete
         if 'request_slots' in diaact.keys():
             if 'taskcomplete' in diaact['request_slots'].keys():
-                del diaact['request_slots']['taskcomplete']
                 diaact['inform_slots']['taskcomplete'] = 'PLACEHOLDER'
 
             # rule for request
-            if len(diaact['request_slots']) > 0: diaact['diaact'] = 'request'
+            if len(diaact['request_slots']) > 0:
+                diaact['diaact'] = 'request'
 
     def diaact_penny_string(self, dia_act):
         """ Convert the Dia-Act into penny string """
@@ -189,6 +189,7 @@ class nlu:
                 slot_val_str += "}"
             penny_str += slot_val_str + ";"
 
-        if penny_str[-1] == ";": penny_str = penny_str[:-1]
+        if penny_str[-1] == ";":
+            penny_str = penny_str[:-1]
         penny_str += ")"
         return penny_str

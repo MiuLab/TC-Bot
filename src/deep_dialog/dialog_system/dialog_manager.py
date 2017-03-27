@@ -65,7 +65,7 @@ class DialogManager:
         ########################################################################
         #   Update state tracker with latest user action
         ########################################################################
-        if self.episode_over != True:
+        if not self.episode_over:
             self.state_tracker.update(user_action=self.user_action)
             self.print_function(user_action=self.user_action)
 
