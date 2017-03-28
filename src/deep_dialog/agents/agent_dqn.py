@@ -229,8 +229,8 @@ class AgentDQN(Agent):
 
         for iter_batch in range(num_batches):
             self.cur_bellman_err = 0
-            for iter in range(len(self.experience_replay_pool) / (batch_size)):
-                batch = [random.choice(self.experience_replay_pool) for i in range(batch_size)]
+            for _ in range(len(self.experience_replay_pool) // batch_size):
+                batch = [random.choice(self.experience_replay_pool) for __ in range(batch_size)]
                 batch_struct = self.dqn.singleBatch(batch, {'gamma': self.gamma}, self.clone_dqn)
                 self.cur_bellman_err += batch_struct['cost']['total_cost']
 
