@@ -95,7 +95,7 @@ if __name__ == "__main__":
      
     parser.add_argument('--success_rate_threshold', dest='success_rate_threshold', type=float, default=0.3, help='the threshold for success rate')
     
-    parser.add_argument('--cv_fold', dest='cv_fold', default=5, type=int, help='cross validation fold')
+    parser.add_argument('--split_fold', dest='split_fold', default=5, type=int, help='the number of folders to split the user goal')
     parser.add_argument('--learning_phase', dest='learning_phase', default='all', type=str, help='train/test/all; default is all')
     
     args = parser.parse_args()
@@ -118,10 +118,10 @@ goal_file_path = params['goal_file_path']
 all_goal_set = pickle.load(open(goal_file_path, 'rb'))
 
 # split goal set
-cv_fold = params.get('cv_fold', 5)
+split_fold = params.get('split_fold', 5)
 goal_set = {'train':[], 'valid':[], 'test':[], 'all':[]}
 for u_goal_id, u_goal in enumerate(all_goal_set):
-    if u_goal_id % cv_fold == 1: goal_set['test'].append(u_goal)
+    if u_goal_id % split_fold == 1: goal_set['test'].append(u_goal)
     else: goal_set['train'].append(u_goal)
     goal_set['all'].append(u_goal)
 # end split goal set
@@ -190,6 +190,7 @@ usersim_params['slot_err_mode'] = params['slot_err_mode']
 usersim_params['intent_err_probability'] = params['intent_err_prob']
 usersim_params['simulator_run_mode'] = params['run_mode']
 usersim_params['simulator_act_level'] = params['act_level']
+usersim_params['learning_phase'] = params['learning_phase']
 
 if usr == 0:# real user
     user_sim = RealUser(movie_dictionary, act_set, slot_set, goal_set, usersim_params)
