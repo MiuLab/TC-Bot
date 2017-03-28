@@ -70,6 +70,7 @@ all the data is under this folder: ./src/deep_dialog/data
 `--write_model_dir`: the directory to write the models<br/>
 `--trained_model_path`: the path of the trained RL agent model; load the trained model for prediction purpose.
 
+`--learning_phase`: train/test/all, default is all. You can split the user goal set into train and test set, or do not split (all); We introduce some randomness at the first sampled user action, even for the same user goal, the generated dialogue might be different.<br/>
 
 ## Running Dialogue Agents
 
