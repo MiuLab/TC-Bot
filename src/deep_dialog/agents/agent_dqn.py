@@ -154,8 +154,8 @@ class AgentDQN(Agent):
         ########################################################################
         #   Representation of KB results (binary)
         ########################################################################
-        kb_binary_rep = np.zeros((1, self.slot_cardinality + 1)) + np.sum(
-            kb_results_dict['matching_all_constraints'] > 0.)
+        kb_binary_rep = np.zeros((1, self.slot_cardinality + 1)) \
+                        + np.sum(kb_results_dict['matching_all_constraints'] > 0.)
         for slot in kb_results_dict:
             if slot in self.slot_set:
                 kb_binary_rep[0, self.slot_set[slot]] = np.sum(kb_results_dict[slot] > 0.)
@@ -218,7 +218,7 @@ class AgentDQN(Agent):
         state_tplus1_rep = self.prepare_state_representation(s_tplus1)
         training_example = (state_t_rep, action_t, reward_t, state_tplus1_rep, episode_over)
 
-        if self.predict_mode == False:  # Training Mode
+        if not self.predict_mode:  # Training Mode
             if self.warm_start == 1:
                 self.experience_replay_pool.append(training_example)
         else:  # Prediction Mode
@@ -234,8 +234,8 @@ class AgentDQN(Agent):
                 batch_struct = self.dqn.singleBatch(batch, {'gamma': self.gamma}, self.clone_dqn)
                 self.cur_bellman_err += batch_struct['cost']['total_cost']
 
-            print("cur bellman err %.4f, experience replay pool %s" % (
-                float(self.cur_bellman_err) / len(self.experience_replay_pool), len(self.experience_replay_pool)))
+            print("cur bellman err %.4f, experience replay pool %s"
+                  % (float(self.cur_bellman_err) / len(self.experience_replay_pool), len(self.experience_replay_pool)))
 
     ################################################################################
     #    Debug Functions
