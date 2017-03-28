@@ -4,7 +4,8 @@ Created on Jul 13, 2016
 @author: xiul
 """
 
-import pickle
+import json
+from io import StringIO
 import copy
 import numpy as np
 
@@ -47,8 +48,13 @@ class nlu:
 
     def load_nlu_model(self, model_path):
         """ load the trained NLU model """
-
-        model_params = pickle.load(open(model_path, 'rb'))
+        with open(model_path, "rt") as f:
+            model_params = json.load(f)
+        for i in model_params["model"]:
+            with StringIO(model_params["model"][i]) as s:
+                model_params["model"][i] = np.loadtxt(s)
+                if model_params["model"][i].ndim == 1:
+                    model_params["model"][i] = np.expand_dims(model_params["model"][i], axis=0)
 
         hidden_size = model_params['model']['Wd'].shape[0]
         output_size = model_params['model']['Wd'].shape[1]
