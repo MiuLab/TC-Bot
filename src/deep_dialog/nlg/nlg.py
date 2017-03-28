@@ -63,7 +63,7 @@ class nlg:
             for slot in inform_slot_set:
                 if dia_act['inform_slots'][slot] == dialog_config.I_DO_NOT_CARE: del dia_act['inform_slots'][slot]
 
-        if dia_act['diaact'] in self.diaact_nl_pairs['dia_acts'].keys():
+        if dia_act['diaact'] in self.diaact_nl_pairs['dia_acts']:
             for ele in self.diaact_nl_pairs['dia_acts'][dia_act['diaact']]:
                 if set(ele['inform_slots']) == set(dia_act['inform_slots'].keys()) and set(ele['request_slots']) == set(
                         dia_act['request_slots'].keys()):
@@ -193,11 +193,6 @@ class nlg:
         """ Load some pre-defined Dia_Act&NL Pairs from file """
         with open(path, "rt") as f:
             self.diaact_nl_pairs = json.load(f)
-
-        for key in self.diaact_nl_pairs['dia_acts'].keys():
-            for ele in self.diaact_nl_pairs['dia_acts'][key]:
-                ele['nl']['usr'] = ele['nl']['usr'].encode('utf-8')  # encode issue
-                ele['nl']['agt'] = ele['nl']['agt'].encode('utf-8')  # encode issue
 
 
 def main(params):
