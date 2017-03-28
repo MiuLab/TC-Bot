@@ -35,7 +35,8 @@ class RuleSimulator(UserSimulator):
         
         self.simulator_run_mode = params['simulator_run_mode']
         self.simulator_act_level = params['simulator_act_level']
-    
+        
+        self.learning_phase = params['learning_phase']
     
     def initialize_episode(self):
         """ Initialize a new episode (dialog) 
@@ -53,7 +54,8 @@ class RuleSimulator(UserSimulator):
         self.episode_over = False
         self.dialog_status = dialog_config.NO_OUTCOME_YET
         
-        self.goal =  random.choice(self.start_set)
+        #self.goal =  random.choice(self.start_set)
+        self.goal = self._sample_goal(self.start_set)
         self.goal['request_slots']['ticket'] = 'UNK'
         self.constraint_check = dialog_config.CONSTRAINT_CHECK_FAILURE
   
@@ -107,7 +109,13 @@ class RuleSimulator(UserSimulator):
         
         self.add_nl_to_action(sample_action)
         return sample_action
-
+    
+    def _sample_goal(self, goal_set):
+        """ sample a user goal  """
+        
+        sample_goal = random.choice(self.start_set[self.learning_phase])
+        return sample_goal
+    
     
     def corrupt(self, user_action):
         """ Randomly corrupt an action with error probs (slot_err_probability and slot_err_mode) on Slot and Intent (intent_err_probability). """

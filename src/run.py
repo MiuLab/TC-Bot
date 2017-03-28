@@ -95,6 +95,8 @@ if __name__ == "__main__":
      
     parser.add_argument('--success_rate_threshold', dest='success_rate_threshold', type=float, default=0.3, help='the threshold for success rate')
     
+    parser.add_argument('--cv_fold', dest='cv_fold', default=5, type=int, help='cross validation fold')
+    parser.add_argument('--learning_phase', dest='learning_phase', default='all', type=str, help='train/test/all; default is all')
     
     args = parser.parse_args()
     params = vars(args)
@@ -113,7 +115,16 @@ dict_path = params['dict_path']
 goal_file_path = params['goal_file_path']
 
 # load the user goals from .p file
-goal_set = pickle.load(open(goal_file_path, 'rb'))
+all_goal_set = pickle.load(open(goal_file_path, 'rb'))
+
+# split goal set
+cv_fold = params.get('cv_fold', 5)
+goal_set = {'train':[], 'valid':[], 'test':[], 'all':[]}
+for u_goal_id, u_goal in enumerate(all_goal_set):
+    if u_goal_id % cv_fold == 1: goal_set['test'].append(u_goal)
+    else: goal_set['train'].append(u_goal)
+    goal_set['all'].append(u_goal)
+# end split goal set
 
 movie_kb_path = params['movie_kb_path']
 movie_kb = pickle.load(open(movie_kb_path, 'rb'))
