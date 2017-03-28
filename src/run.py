@@ -108,10 +108,10 @@ if __name__ == "__main__":
 
     # load NLG & NLU model
     parser.add_argument('--nlg_model_path', dest='nlg_model_path', type=str,
-                        default='./deep_dialog/models/nlg/lstm_tanh_relu_[1468202263.38]_2_0.610.pkl',
+                        default='./deep_dialog/models/nlg/lstm_tanh_relu_[1468202263.38]_2_0.610.json',
                         help='path to model file')
     parser.add_argument('--nlu_model_path', dest='nlu_model_path', type=str,
-                        default='./deep_dialog/models/nlu/lstm_[1468447442.91]_39_80_0.921.p',
+                        default='./deep_dialog/models/nlu/lstm_[1468447442.91]_39_80_0.921.json',
                         help='path to the NLU model file')
 
     parser.add_argument('--act_level', dest='act_level', type=int, default=0,
@@ -304,10 +304,9 @@ def save_model(path, agt, success_rate, agent, best_epoch, cur_epoch):
         print(e)
 
 
-""" save performance numbers """
-
-
 def save_performance_records(path, agt, records):
+    """ save performance numbers """
+
     filename = 'agt_%s_performance_records.json' % (agt)
     filepath = os.path.join(path, filename)
     try:
@@ -318,10 +317,9 @@ def save_performance_records(path, agt, records):
         print(e)
 
 
-""" Run N simulation Dialogues """
-
-
 def simulation_epoch(simulation_epoch_size):
+    """ Run N simulation Dialogues """
+
     successes = 0
     cumulative_reward = 0
     cumulative_turns = 0
@@ -336,23 +334,21 @@ def simulation_epoch(simulation_epoch_size):
             if episode_over:
                 if reward > 0:
                     successes += 1
-                    print("simulation episode %s: Success" % (episode))
+                    print("simulation episode %s: Success" % episode)
                 else:
-                    print("simulation episode %s: Fail" % (episode))
+                    print("simulation episode %s: Fail" % episode)
                 cumulative_turns += dialog_manager.state_tracker.turn_count
 
     res['success_rate'] = float(successes) / simulation_epoch_size
     res['ave_reward'] = float(cumulative_reward) / simulation_epoch_size
     res['ave_turns'] = float(cumulative_turns) / simulation_epoch_size
-    print("simulation success rate %s, ave reward %s, ave turns %s" % (
-    res['success_rate'], res['ave_reward'], res['ave_turns']))
+    print("simulation success rate %s, ave reward %s, ave turns %s"
+          % (res['success_rate'], res['ave_reward'], res['ave_turns']))
     return res
 
 
-""" Warm_Start Simulation (by Rule Policy) """
-
-
 def warm_start_simulation():
+    """ Warm_Start Simulation (by Rule Policy) """
     successes = 0
     cumulative_reward = 0
     cumulative_turns = 0
