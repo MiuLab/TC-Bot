@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-token = '358288982:AAGTQa1xSExTiBHOJa3BriAH7sp2sMSalrc'
+token = ''
 trained_model_path = './deep_dialog/checkpoints/rl_agent/right_model.p'
 
 nlg_model_path = './deep_dialog/models/nlg/lstm_tanh_relu_[1468202263.38]_2_0.610.json'
