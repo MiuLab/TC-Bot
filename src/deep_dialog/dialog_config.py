@@ -4,6 +4,8 @@ Created on May 17, 2016
 @author: xiul, t-zalipt
 """
 
+sys_ask_slots = ['moviename', 'starttime', 'theater', 'city', 'state', 'date', 'genre', 'ticket', 'numberofpeople']
+
 sys_request_slots = ['moviename', 'theater', 'starttime', 'date', 'numberofpeople', 'genre', 'state', 'city', 'zip',
                      'critic_rating', 'mpaa_rating', 'distanceconstraints', 'video_format', 'theater_chain', 'price',
                      'actor', 'description', 'other', 'numberofkids']
