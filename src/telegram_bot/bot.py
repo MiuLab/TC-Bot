@@ -5,14 +5,16 @@ from emoji import emojize
 import random
 import pickle
 import json
-from deep_dialog.agents import AgentDQN
-from deep_dialog.agents import agent_baselines
+# from deep_dialog.agents import AgentDQN
+# from deep_dialog.agents import agent_baselines
 from deep_dialog.nlg import nlg
 from deep_dialog.nlu import nlu
 from deep_dialog.usersims.realUser import RealUser
 from telegramDialogClasses import TelegramDialogManager
 from telegramDialogClasses import RuleAgent
 from deep_dialog.dialog_system.dict_reader import text_to_dict
+import telebot
+import cherrypy
 
 
 def load_file(file_name):
@@ -24,13 +26,15 @@ def load_file(file_name):
             obj = json.load(f)
     return obj
 
+
 ######### --****-- Begin of initialization ---****-- ###########
 
+WEBHOOKS_AVAIL = False
+
 config = load_file("/Users/fogside/Projects/Telegram_bot/RL-Dialog-Bot/src/telegram_bot/config.json")
+bot = telebot.TeleBot(config["token"])
 
-# bot = telebot.TeleBot(config["token"])
 turn_count = 0
-
 movie_kb = load_file(config["movie_kb_path"])
 act_set = text_to_dict(config['act_set_path'])
 slot_set = text_to_dict(config['slot_set_path'])
@@ -49,13 +53,10 @@ user = RealUser()
 
 agent.set_nlg_model(nlg_model)
 # user.set_nlg_model(nlg_model)
-
 # agent.set_nlu_model(nlu_model)
 user.set_nlu_model(nlu_model)
 
 dia_manager = TelegramDialogManager(agent, user, act_set, slot_set, movie_kb)
-
-######### --****-- End of initialization ---****-- ##############
 
 def get_random_emoji(num = 1):
     emoji_list = [":rainbow:", ":octopus:", ":panda_face:",
@@ -70,80 +71,140 @@ def get_random_emoji(num = 1):
 
     return "".join(res_list) + '\n'
 
-dia_manager.initialize_episode()
-turn_count+=1
-
-print("Hello! I can help you to buy tickets to the cinema.\nWhat film would you like to watch?")
-
-while(turn_count > 0):
-    msg = input()
-    episode_over, agent_ans = dia_manager.next_turn(msg)
-    turn_count+=1
-    # bot.send_message(msg, agent_ans+' ' + get_random_emoji(1))
-    print("turn #{}: {}".format(turn_count, agent_ans))
-    if episode_over:
-        turn_count = 0
-    if msg == 'stop':
-        turn_count = 0
-
-exit(0)
-
-
-
-####### --** Debugging **-- ########
-
+#########  --****---    End of initialization ---****--   ###########
+######### --****--- Next code is for debugging ---****-- ############
 
 #
+# dia_manager.initialize_episode()
+# turn_count+=1
 #
-# @bot.message_handler(commands=['help'])
-# def handle_help(message):
-#     help_message = "Hello, friend!\n" + get_random_emoji(4) + \
-#                    "I can help you to buy tickets  " + emojize(":ticket:")+" to the cinema.\n" \
-#                    "=====================================\n" \
-#                    "* Print /start to start a conversation;\n" \
-#                    "* Print /end to end the dialog;\n"
+# print("Hello! I can help you to buy tickets to the cinema.\nWhat film would you like to watch?")
 #
-#     bot.send_message(message.chat.id, help_message)
+# while(turn_count > 0):
+#     msg = input()
+#     episode_over, agent_ans = dia_manager.next_turn(msg)
+#     turn_count+=1
+#     # bot.send_message(msg, agent_ans+' ' + get_random_emoji(1))
+#     print("turn #{}: {}".format(turn_count, agent_ans))
+#     if episode_over:
+#         turn_count = 0
+#     if msg == 'stop':
+#         turn_count = 0
 #
+# exit(0)
 #
-# @bot.message_handler(commands=['start'])
-# def handle_start(message):
-#     global turn_count
-#     turn_count = 1
-#     greetings = "Hello! I can help you to buy tickets to the cinema.\nWhat film would you like to watch?"
-#     bot.send_message(message.chat.id, greetings)
-#
-#
-# @bot.message_handler(commands=['end'])
-# def handle_end(message):
-#     global turn_count
-#     turn_count = 0
-#     goodbye = "Farewell! Let me know if you would like to buy tickets again." + get_random_emoji()
-#     bot.send_message(message.chat.id, goodbye)
-#
-# @bot.message_handler(commands=['films'])
-# def show_films(message):
-#     # global turn_count
-#     # turn_count = 0
-#     # goodbye = "Farewell! Let me know if you would like to buy tickets again." + get_random_emoji()
-#     available_films = []
-#     bot.send_message(message.chat.id, available_films)
-#
-#
-# @bot.message_handler(content_types=["text"])
-# def handle_text(message):
-#     global turn_count
-#     if turn_count > 0:
-#         if turn_count == 1:
-#             dia_manager.initialize_episode()
-#
-#         episode_over, agent_ans = dia_manager.next_turn(message.text)
-#         turn_count+=1
-#         bot.send_message(message.chat.id, agent_ans+' ' + get_random_emoji(1))
-#         if episode_over:
-#             turn_count = 0
-#
-#
-#
-# if __name__ == '__main__':
-#     bot.polling(none_stop=True)
+
+
+####### --** End of Debugging **-- ########
+
+
+
+@bot.message_handler(commands=['help'])
+def handle_help(message):
+    help_message = "Hello, friend!\n" + get_random_emoji(4) + \
+                   "I can help you to buy tickets  " + emojize(":ticket:")+" to the cinema.\n" \
+                   "=====================================\n" \
+                   "* Print /start to start a conversation;\n" \
+                   "* Print /end to end the dialog;\n"
+
+    bot.send_message(message.chat.id, help_message)
+
+
+@bot.message_handler(commands=['start'])
+def handle_start(message):
+    global turn_count
+    turn_count = 1
+    greetings = "Hello! I can help you to buy tickets to the cinema.\nWhat film would you like to watch?"
+    bot.send_message(message.chat.id, greetings)
+
+
+@bot.message_handler(commands=['end'])
+def handle_end(message):
+    global turn_count
+    turn_count = 0
+    goodbye = "Farewell! Let me know if you would like to buy tickets again." + get_random_emoji()
+    bot.send_message(message.chat.id, goodbye)
+
+@bot.message_handler(commands=['films'])
+def show_films(message):
+    '''
+
+    These should return a
+    list of available films for user
+
+    '''
+
+    available_films = []
+    warning = 'currently not available'
+    if len(available_films) == 0:
+        bot.send_message(message.chat.id, warning)
+    else:
+        bot.send_message(message.chat.id, available_films)
+
+
+@bot.message_handler(func=lambda message: True, content_types=["text"])
+def handle_text(message):
+    global turn_count
+    if turn_count > 0:
+        if turn_count == 1:
+            dia_manager.initialize_episode()
+
+        episode_over, agent_ans = dia_manager.next_turn(message.text)
+        turn_count+=1
+        bot.send_message(message.chat.id, agent_ans+' ' + get_random_emoji(1))
+        if episode_over:
+            turn_count = 0
+    else:
+        bot.reply_to(message, message.text)
+
+
+if WEBHOOKS_AVAIL:
+
+    WEBHOOK_HOST = config['WEBHOOK_HOST']
+    WEBHOOK_PORT = config['WEBHOOK_PORT']
+    WEBHOOK_LISTEN = config['WEBHOOK_LISTEN']
+
+    WEBHOOK_SSL_CERT = config['WEBHOOK_SSL_CERT']  ## sertificat path
+    WEBHOOK_SSL_PRIV = config['WEBHOOK_SSL_PRIV']  ## private key path
+
+    WEBHOOK_URL_BASE = "https://%s:%s" % (WEBHOOK_HOST, WEBHOOK_PORT)
+    WEBHOOK_URL_PATH = "/%s/" % config['token']
+
+
+    class WebhookServer(object):
+        @cherrypy.expose
+        def index(self):
+            if 'content-length' in cherrypy.request.headers and \
+                            'content-type' in cherrypy.request.headers and \
+                            cherrypy.request.headers['content-type'] == 'application/json':
+                length = int(cherrypy.request.headers['content-length'])
+                json_string = cherrypy.request.body.read(length).decode("utf-8")
+                update = telebot.types.Update.de_json(json_string)
+                bot.process_new_updates([update])
+                return ''
+            else:
+                raise cherrypy.HTTPError(403)
+
+
+    # Снимаем вебхук перед повторной установкой (избавляет от некоторых проблем)
+    bot.remove_webhook()
+
+    # Ставим заново вебхук
+    bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
+                    certificate=open(WEBHOOK_SSL_CERT, 'r'))
+
+    # Указываем настройки сервера CherryPy
+    cherrypy.config.update({
+        'server.socket_host': WEBHOOK_LISTEN,
+        'server.socket_port': WEBHOOK_PORT,
+        'server.ssl_module': 'builtin',
+        'server.ssl_certificate': WEBHOOK_SSL_CERT,
+        'server.ssl_private_key': WEBHOOK_SSL_PRIV
+    })
+
+
+    cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
+
+else:
+    bot.delete_webhook()
+    bot.polling(none_stop=True) ## uncomment it for local testing;
