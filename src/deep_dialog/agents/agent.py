@@ -4,7 +4,7 @@ Created on May 17, 2016
 @author: xiul, t-zalipt
 """
 
-from src.deep_dialog import dialog_config
+from deep_dialog import dialog_config
 
 
 class Agent:
@@ -85,8 +85,10 @@ class Agent:
             user_nlg_sentence = self.nlg_model.convert_diaact_to_nl(agent_action['act_slot_response'], 'agt')
             # self.nlg_model.translate_diaact(agent_action['act_slot_response']) # NLG
             agent_action['act_slot_response']['nl'] = user_nlg_sentence
+
         elif agent_action['act_slot_value_response']:
             agent_action['act_slot_value_response']['nl'] = ""
             user_nlg_sentence = self.nlg_model.convert_diaact_to_nl(agent_action['act_slot_value_response'], 'agt')
             # self.nlg_model.translate_diaact(agent_action['act_slot_value_response']) # NLG
             agent_action['act_slot_response']['nl'] = user_nlg_sentence
+        return user_nlg_sentence
