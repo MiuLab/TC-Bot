@@ -28,41 +28,41 @@ class RealUser(UserSimulator):
         act_slot_value_response = self.generate_diaact_from_nl(message)
         return {"act_slot_response": act_slot_value_response, "act_slot_value_response": act_slot_value_response}
 
-    def initialize_episode(self, message):
-        """ Initialize a new episode (dialog)"""
+    # def initialize_episode(self, message):
+    #     """ Initialize a new episode (dialog)"""
+    #
+    #     """ Initialize a new episode. This function is called every time a new episode is run. """
+    #
+    #     user_action = self.generate_diaact_from_nl(message)
+    #     # self.goal = random.choice(self.start_set)
+    #     # self.goal['request_slots']['ticket'] = 'UNK'
+    #     # episode_over, user_action = self._sample_action()
+    #     # assert (episode_over != 1), ' but we just started'
+    #
+    #     return user_action
 
-        """ Initialize a new episode. This function is called every time a new episode is run. """
+    def next(self, message):
 
         user_action = self.generate_diaact_from_nl(message)
-        # self.goal = random.choice(self.start_set)
-        # self.goal['request_slots']['ticket'] = 'UNK'
-        # episode_over, user_action = self._sample_action()
-        # assert (episode_over != 1), ' but we just started'
-
-        return user_action
-
-    def next(self, system_action, message):
-
-        user_action = self.generate_diaact_from_nl(message)
-        episode_over = False
-        dialog_status = dialog_config.NO_OUTCOME_YET
+        # episode_over = False
+        # dialog_status = dialog_config.NO_OUTCOME_YET
 
         # add NL to dia_act
         # return response_action, self.episode_over, self.dialog_status
 
-        return user_action, episode_over, dialog_status
+        return user_action #, episode_over, dialog_status
 
 
     def generate_diaact_from_nl(self, string):
         """ Generate Dia_Act Form with NLU """
 
-        agent_action = {}
-        agent_action['diaact'] = 'UNK'
-        agent_action['inform_slots'] = {}
-        agent_action['request_slots'] = {}
+        user_action = {}
+        user_action['diaact'] = 'UNK'
+        user_action['inform_slots'] = {}
+        user_action['request_slots'] = {}
 
         if len(string) > 0:
-            agent_action = self.nlu_model.generate_dia_act(string)
+            user_action = self.nlu_model.generate_dia_act(string)
 
-        agent_action['nl'] = string
-        return agent_action
+        user_action['nl'] = string
+        return user_action
