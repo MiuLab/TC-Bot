@@ -13,14 +13,17 @@ from src.deep_dialog import dialog_config
 class KBHelper:
     """ An assistant to fill in values for the agent (which knows about slots of values) """
 
-    def __init__(self, movie_dictionary):
-        """ Constructor for a KBHelper """
+    def __init__(self, movie_dictionary, cmp_limit=90):
+        """ Constructor for a KBHelper
+        :param movie_dictionary dict with movies' descriptions
+        :param cmp_limit        the lower bound for comparison of two strings
+        """
 
         self.movie_dictionary = movie_dictionary
         self.cached_kb = defaultdict(list)
         self.cached_kb_slot = defaultdict(list)
 
-        self.cmp_limit = 90  # the lower bound for comparison of two strings
+        self.cmp_limit = cmp_limit
 
     def fill_inform_slots(self, inform_slots_to_be_filled, current_slots):
         """ Takes unfilled inform slots and current_slots, returns dictionary of filled informed slots (with values)
