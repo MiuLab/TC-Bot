@@ -1,6 +1,10 @@
 # from deep_dialog.dialog_system.state_tracker import StateTracker
-from deep_dialog import dialog_config
-from deep_dialog.agents.agent import Agent
+from collections import Counter
+
+from fuzzywuzzy import fuzz
+
+from src.deep_dialog import dialog_config
+from src.deep_dialog.agents.agent import Agent
 # from deep_dialog.dialog_system.kb_helper import KBHelper
 # from collections import defaultdict
 import numpy as np
@@ -238,16 +242,14 @@ class TelegramKBHelper:
                     kb_results) > 0 else dialog_config.NO_VALUE_MATCH
                 continue
 
-            if slot == 'closing': continue
+            if slot == 'closing':
+                continue
 
             ####################################################################
             #   Grab the value for the slot with the highest count and fill it
             ####################################################################
 
-            values_dict = self.available_slot_values(slot, kb_results)
-
-            values_counts = [(v, values_dict[v]) for v in
-                             values_dict.keys()]  ## TODO: why didn't use just values_dict.items()?
+            values_counts = Counter(self.available_slot_values(slot, kb_results).values()).items()
             if len(values_counts) > 0:
                 filled_slots[slot] = sorted(values_counts, key=lambda x: -x[1])[0][0]
             else:
@@ -288,23 +290,25 @@ class TelegramKBHelper:
             return self.movie_dictionary
 
         ### starting looking for the suitable records:
-        for id in self.movie_dictionary.keys():
-            kb_keys = self.movie_dictionary[id].keys()
+        for id_ in self.movie_dictionary.keys():
+            kb_keys = self.movie_dictionary[id_].keys()
 
             ### checking if all constraits is available
             ### for the current film id:
 
             if set(constrain_keys).issubset(set(kb_keys)):
                 # print('HERE 3')
-                match = True
                 ### check if all constraints are the same in current_slots and in movie_dict:
                 ### for that current film id:
+                match = True
                 for k in constrain_keys:
-                    if str(current_slots[k]).lower() != str(
-                            self.movie_dictionary[id][k]).lower():  # TODO: needs elastic search
+                    if fuzz.ratio(str(current_slots[k]), str(self.movie_dictionary[id_][k])) > self.cmp_limit:
+                        continue
+                    else:
                         match = False
+                        break
                 if match:
-                    ret_result.append((id, self.movie_dictionary[id]))
+                    ret_result.append((id_, self.movie_dictionary[id_]))
 
         ### add everything to cache;
         query_idx_keys = frozenset(current_slots.items())
@@ -336,8 +340,8 @@ class TelegramKBHelper:
                 if slot == 'ticket' or inform_slots[slot] == dialog_config.I_DO_NOT_CARE:
                     continue
 
-                if slot in self.movie_dictionary[movie_id].keys():
-                    if inform_slots[slot].lower() == self.movie_dictionary[movie_id][slot].lower():
+                if slot in self.movie_dictionary[movie_id]:
+                    if fuzz.ratio(inform_slots[slot], self.movie_dictionary[movie_id][slot]) > self.cmp_limit:
                         kb_results[slot] += 1
                     else:
                         all_slots_match = 0
