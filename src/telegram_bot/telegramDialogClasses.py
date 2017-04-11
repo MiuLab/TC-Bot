@@ -205,9 +205,10 @@ class TelegramStateTracker:
 class TelegramKBHelper:
     """ An assistant to fill in values for the agent (which knows about slots of values) """
 
-    def __init__(self, movie_dictionary):
+    def __init__(self, movie_dictionary, cmp_limit=90):
         """ Constructor for a KBHelper """
 
+        self.cmp_limit = cmp_limit
         self.movie_dictionary = movie_dictionary
         self.cached_kb_slot = {}
 

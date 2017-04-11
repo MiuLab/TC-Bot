@@ -34,8 +34,9 @@ class nlu:
 
             # special handling with intent label
             for tag_id in self.inverse_tag_dict.keys():
-                if self.inverse_tag_dict[tag_id].startswith('B-') or self.inverse_tag_dict[tag_id].startswith('I-') or \
-                                self.inverse_tag_dict[tag_id] == 'O':
+                if self.inverse_tag_dict[tag_id].startswith('B-') \
+                        or self.inverse_tag_dict[tag_id].startswith('I-') \
+                        or self.inverse_tag_dict[tag_id] == 'O':
                     probs[-1][tag_id] = 0
 
             pred_words_indices = np.nanargmax(probs, axis=1)
