@@ -78,10 +78,10 @@ class KBHelper:
         """ Return the set of values available for the slot based on the current constraints """
 
         slot_values = {}
-        for movie_id in kb_results.keys():
-            if slot in kb_results[movie_id].keys():
+        for movie_id in kb_results:
+            if slot in kb_results[movie_id]:
                 slot_val = kb_results[movie_id][slot]
-                if slot_val in slot_values.keys():
+                if slot_val in slot_values:
                     slot_values[slot_val] += 1
                 else:
                     slot_values[slot_val] = 1
