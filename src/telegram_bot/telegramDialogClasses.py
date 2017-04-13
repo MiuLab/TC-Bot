@@ -1,5 +1,5 @@
 # from deep_dialog.dialog_system.state_tracker import StateTracker
-from collections import Counter
+from collections import defaultdict
 
 from fuzzywuzzy import fuzz
 
@@ -250,25 +250,19 @@ class TelegramKBHelper:
             #   Grab the value for the slot with the highest count and fill it
             ####################################################################
 
-            values_counts = Counter(self.available_slot_values(slot, kb_results).values()).items()
-            if len(values_counts) > 0:
-                filled_slots[slot] = sorted(values_counts, key=lambda x: -x[1])[0][0]
-            else:
-                filled_slots[slot] = dialog_config.NO_VALUE_MATCH  # "NO VALUE MATCHES SNAFU!!!"
+            values_counts = self.available_slot_values(slot, kb_results).items()
+            filled_slots[slot] = max(values_counts, key=lambda x: x[1], default=(dialog_config.NO_VALUE_MATCH, 1))[0]
 
         return filled_slots
 
     def available_slot_values(self, slot, kb_results):
         """ Return the set of values available for the slot based on the current constraints """
 
-        slot_values = {}
-        for movie_id in kb_results.keys():
-            if slot in kb_results[movie_id].keys():
+        slot_values = defaultdict(int)
+        for movie_id in kb_results:
+            if slot in kb_results[movie_id]:
                 slot_val = kb_results[movie_id][slot]
-                if slot_val in slot_values.keys():
-                    slot_values[slot_val] += 1
-                else:
-                    slot_values[slot_val] = 1
+                slot_values[slot_val] += 1
         return slot_values
 
     def available_results_from_kb(self, current_slots):
