@@ -4,19 +4,26 @@ Created on May 18, 2016
 @author: xiul, t-zalipt
 """
 
-from collections import defaultdict
+from collections import defaultdict, Counter
+from fuzzywuzzy import fuzz
+
 from src.deep_dialog import dialog_config
 
 
 class KBHelper:
     """ An assistant to fill in values for the agent (which knows about slots of values) """
 
-    def __init__(self, movie_dictionary):
-        """ Constructor for a KBHelper """
+    def __init__(self, movie_dictionary, cmp_limit=90):
+        """ Constructor for a KBHelper
+        :param movie_dictionary dict with movies' descriptions
+        :param cmp_limit        the lower bound for comparison of two strings
+        """
 
         self.movie_dictionary = movie_dictionary
         self.cached_kb = defaultdict(list)
         self.cached_kb_slot = defaultdict(list)
+
+        self.cmp_limit = cmp_limit
 
     def fill_inform_slots(self, inform_slots_to_be_filled, current_slots):
         """ Takes unfilled inform slots and current_slots, returns dictionary of filled informed slots (with values)
@@ -34,23 +41,24 @@ class KBHelper:
             print('Number of movies in KB satisfying current constraints: ', len(kb_results))
 
         filled_in_slots = {}
-        if 'taskcomplete' in inform_slots_to_be_filled.keys():
+        if 'taskcomplete' in inform_slots_to_be_filled:
             filled_in_slots.update(current_slots['inform_slots'])
 
-        for slot in inform_slots_to_be_filled.keys():
+        for slot in inform_slots_to_be_filled:
             if slot == 'numberofpeople':
-                if slot in current_slots['inform_slots'].keys():
+                if slot in current_slots['inform_slots']:
                     filled_in_slots[slot] = current_slots['inform_slots'][slot]
-                elif slot in inform_slots_to_be_filled.keys():
+                elif slot in inform_slots_to_be_filled:
                     filled_in_slots[slot] = inform_slots_to_be_filled[slot]
                 continue
 
             if slot == 'ticket' or slot == 'taskcomplete':
-                filled_in_slots[slot] = dialog_config.TICKET_AVAILABLE if len(
-                    kb_results) > 0 else dialog_config.NO_VALUE_MATCH
+                filled_in_slots[slot] = dialog_config.TICKET_AVAILABLE \
+                    if len(kb_results) > 0 else dialog_config.NO_VALUE_MATCH
                 continue
 
-            if slot == 'closing': continue
+            if slot == 'closing':
+                continue
 
             ####################################################################
             #   Grab the value for the slot with the highest count and fill it
@@ -65,14 +73,15 @@ class KBHelper:
 
         return filled_in_slots
 
-    def available_slot_values(self, slot, kb_results):
+    @staticmethod
+    def available_slot_values(slot, kb_results):
         """ Return the set of values available for the slot based on the current constraints """
 
         slot_values = {}
-        for movie_id in kb_results.keys():
-            if slot in kb_results[movie_id].keys():
+        for movie_id in kb_results:
+            if slot in kb_results[movie_id]:
                 slot_val = kb_results[movie_id][slot]
-                if slot_val in slot_values.keys():
+                if slot_val in slot_values:
                     slot_values[slot_val] += 1
                 else:
                     slot_values[slot_val] = 1
@@ -85,55 +94,38 @@ class KBHelper:
         current_slots = current_slots['inform_slots']
         constrain_keys = current_slots.keys()
 
-        constrain_keys = [k for k in constrain_keys if k != 'ticket' and \
-                          k != 'numberofpeople' and \
-                          k != 'taskcomplete' and \
-                          k != 'closing']
+        constrain_keys = [k for k in constrain_keys if k not in ['ticket', 'numberofpeople', 'taskcomplete', 'closing']]
         constrain_keys = [k for k in constrain_keys if current_slots[k] != dialog_config.I_DO_NOT_CARE]
 
         query_idx_keys = frozenset(current_slots.items())
         cached_kb_ret = self.cached_kb[query_idx_keys]
 
-        cached_kb_length = len(cached_kb_ret) if cached_kb_ret != None else -1
+        cached_kb_length = len(cached_kb_ret) if cached_kb_ret is not None else -1
         if cached_kb_length > 0:
             return dict(cached_kb_ret)
         elif cached_kb_length == -1:
-            return dict([])
+            return {}
 
         # kb_results = copy.deepcopy(self.movie_dictionary)
-        for id in self.movie_dictionary.keys():
-            kb_keys = self.movie_dictionary[id].keys()
+        for id_ in self.movie_dictionary:
+            kb_keys = self.movie_dictionary[id_].keys()
             if len(set(constrain_keys).union(set(kb_keys)) ^ (set(constrain_keys) ^ set(kb_keys))) == len(
                     constrain_keys):
                 match = True
-                for idx, k in enumerate(constrain_keys):
-                    if str(current_slots[k]).lower() == str(self.movie_dictionary[id][k]).lower():
+                for k in constrain_keys:
+                    if fuzz.ratio(str(current_slots[k]), str(self.movie_dictionary[id_][k])) > self.cmp_limit:
                         continue
                     else:
                         match = False
+                        break
                 if match:
-                    self.cached_kb[query_idx_keys].append((id, self.movie_dictionary[id]))
-                    ret_result.append((id, self.movie_dictionary[id]))
-
-                    # for slot in current_slots['inform_slots'].keys():
-                    #     if slot == 'ticket' or slot == 'numberofpeople'
-                    #        or slot == 'taskcomplete' or slot == 'closing': continue
-                    #     if current_slots['inform_slots'][slot] == dialog_config.I_DO_NOT_CARE: continue
-                    #
-                    #     if slot not in self.movie_dictionary[movie_id].keys():
-                    #         if movie_id in kb_results.keys():
-                    #             del kb_results[movie_id]
-                    #     else:
-                    #         if current_slots['inform_slots'][slot].lower()
-                    #               != self.movie_dictionary[movie_id][slot].lower():
-                    #             if movie_id in kb_results.keys():
-                    #                 del kb_results[movie_id]
+                    self.cached_kb[query_idx_keys].append((id_, self.movie_dictionary[id_]))
+                    ret_result.append((id_, self.movie_dictionary[id_]))
 
         if len(ret_result) == 0:
             self.cached_kb[query_idx_keys] = None
 
-        ret_result = dict(ret_result)
-        return ret_result
+        return dict(ret_result)
 
     def available_results_from_kb_for_slots(self, inform_slots):
         """ Return the count statistics for each constraint in inform_slots """
@@ -147,14 +139,16 @@ class KBHelper:
         if len(cached_kb_slot_ret) > 0:
             return cached_kb_slot_ret[0]
 
-        for movie_id in self.movie_dictionary.keys():
+        for movie_id in self.movie_dictionary:
             all_slots_match = 1
-            for slot in inform_slots.keys():
-                if slot == 'ticket' or inform_slots[slot] == dialog_config.I_DO_NOT_CARE:
+            for slot in inform_slots:
+                if slot == 'ticket':
+                    continue
+                if inform_slots[slot] == dialog_config.I_DO_NOT_CARE:
                     continue
 
-                if slot in self.movie_dictionary[movie_id].keys():
-                    if inform_slots[slot].lower() == self.movie_dictionary[movie_id][slot].lower():
+                if slot in self.movie_dictionary[movie_id]:
+                    if fuzz.ratio(inform_slots[slot], self.movie_dictionary[movie_id][slot]) > self.cmp_limit:
                         kb_results[slot] += 1
                     else:
                         all_slots_match = 0
@@ -169,7 +163,7 @@ class KBHelper:
         """ A dictionary of the number of results matching each current constraint.
         The agent needs this to decide what to do next. """
 
-        database_results = {}  # { date:100, distanceconstraints:60, theater:30,  matching_all_constraints: 5}
+        # database_results = { date:100, distanceconstraints:60, theater:30,  matching_all_constraints: 5}
         database_results = self.available_results_from_kb_for_slots(current_slots['inform_slots'])
         return database_results
 
@@ -180,13 +174,12 @@ class KBHelper:
         return_suggest_slot_vals = {}
         for slot in request_slots.keys():
             avail_values_dict = self.available_slot_values(slot, avail_kb_results)
-            values_counts = [(v, avail_values_dict[v]) for v in avail_values_dict.keys()]
+            values_counts = Counter(avail_values_dict.values()).items()
 
+            return_suggest_slot_vals[slot] = []
             if len(values_counts) > 0:
-                return_suggest_slot_vals[slot] = []
                 sorted_dict = sorted(values_counts, key=lambda x: -x[1])
-                for k in sorted_dict: return_suggest_slot_vals[slot].append(k[0])
-            else:
-                return_suggest_slot_vals[slot] = []
+                for k in sorted_dict:
+                    return_suggest_slot_vals[slot].append(k[0])
 
         return return_suggest_slot_vals
