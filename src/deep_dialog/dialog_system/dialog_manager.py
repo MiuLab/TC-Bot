@@ -5,29 +5,18 @@ Created on May 17, 2016
 """
 
 import json
-from . import StateTracker
+from .dialog_manager_super import DialogManagerBase
 from src.deep_dialog import dialog_config
 
 
-class DialogManager:
+class DialogManager(DialogManagerBase):
     """ A dialog manager to mediate the interaction between an agent and a customer """
-
-    def __init__(self, agent, user, act_set, slot_set, movie_dictionary):
-        self.agent = agent
-        self.user = user
-        self.act_set = act_set
-        self.slot_set = slot_set
-        self.state_tracker = StateTracker(act_set, slot_set, movie_dictionary)
-        self.user_action = None
-        self.reward = 0
-        self.episode_over = False
 
     def initialize_episode(self):
         """ Refresh state for new dialog """
 
+        super().initialize_episode()
         self.reward = 0
-        self.episode_over = False
-        self.state_tracker.initialize_episode()
         self.user_action = self.user.initialize_episode()
         self.state_tracker.update(user_action=self.user_action)
 
@@ -36,7 +25,6 @@ class DialogManager:
             print(json.dumps(self.user.goal, indent=2))
         self.print_function(user_action=self.user_action)
 
-        self.agent.initialize_episode()
 
     def next_turn(self, record_training_data=True):
         """ This function initiates each subsequent exchange between agent and user (agent first) """
@@ -44,8 +32,8 @@ class DialogManager:
         ########################################################################
         #   CALL AGENT TO TAKE HER TURN
         ########################################################################
-        self.state = self.state_tracker.get_state_for_agent()
-        self.agent_action = self.agent.state_to_action(self.state)
+        agent_state = self.state_tracker.get_state_for_agent()
+        self.agent_action = self.agent.state_to_action(agent_state)
 
         ########################################################################
         #   Register AGENT action with the state_tracker
@@ -73,7 +61,7 @@ class DialogManager:
         #  Inform agent of the outcome for this timestep (s_t, a_t, r, s_{t+1}, episode_over)
         ########################################################################
         if record_training_data:
-            self.agent.register_experience_replay_tuple(self.state, self.agent_action, self.reward,
+            self.agent.register_experience_replay_tuple(agent_state, self.agent_action, self.reward,
                                                         self.state_tracker.get_state_for_agent(), self.episode_over)
 
         return self.episode_over, self.reward
