@@ -4,8 +4,6 @@ Created on May 17, 2016
 @author: xiul, t-zalipt
 """
 
-from deep_dialog import dialog_config
-
 
 class Agent:
     """ Prototype for all agent classes, defining the interface they must uphold """
@@ -21,8 +19,8 @@ class Agent:
         self.movie_dict = movie_dict
         self.act_set = act_set
         self.slot_set = slot_set
-        self.act_cardinality = len(list(act_set.keys()))
-        self.slot_cardinality = len(list(slot_set.keys()))
+        self.act_cardinality = len(list(act_set.keys())) if act_set is not None else None
+        self.slot_cardinality = len(list(slot_set.keys())) if slot_set is not None else None
 
         self.epsilon = params['epsilon']
         self.agent_run_mode = params['agent_run_mode']
@@ -30,14 +28,14 @@ class Agent:
 
     def initialize_episode(self):
         """ Initialize a new episode. This function is called every time a new episode is run. """
-        self.current_action = {}  # TODO Changed this variable's name to current_action
-        self.current_action['diaact'] = None  # TODO Does it make sense to call it a state if it has an act? Which act?
-                                              # The Most recent?
+
+        self.current_action = {}
+        self.current_action['diaact'] = None
         self.current_action['inform_slots'] = {}
         self.current_action['request_slots'] = {}
-        self.current_action['turn'] = 0
+        self.current_action['turn'] = -1
 
-    def state_to_action(self, state, available_actions):
+    def state_to_action(self, **kwargs):
         """ Take the current state and return an action according to the current exploration/exploitation policy
 
         We define the agents flexibly so that they can either operate on act_slot representations or act_slot_value representations.
@@ -80,15 +78,15 @@ class Agent:
     def add_nl_to_action(self, agent_action):
         """ Add NL to Agent Dia_Act """
 
+        user_nlg_sentence = '$NONE$'
         if agent_action['act_slot_response']:
             agent_action['act_slot_response']['nl'] = ""
             user_nlg_sentence = self.nlg_model.convert_diaact_to_nl(agent_action['act_slot_response'], 'agt')
-            # self.nlg_model.translate_diaact(agent_action['act_slot_response']) # NLG
             agent_action['act_slot_response']['nl'] = user_nlg_sentence
 
         elif agent_action['act_slot_value_response']:
             agent_action['act_slot_value_response']['nl'] = ""
             user_nlg_sentence = self.nlg_model.convert_diaact_to_nl(agent_action['act_slot_value_response'], 'agt')
-            # self.nlg_model.translate_diaact(agent_action['act_slot_value_response']) # NLG
             agent_action['act_slot_response']['nl'] = user_nlg_sentence
+
         return user_nlg_sentence
