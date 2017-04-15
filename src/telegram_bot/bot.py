@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
+# import sys
+# sys.path.insert(1, "/home/fogside/telegram-bot/RL-Dialog-Bot")
+# sys.path.insert(1, "/home/fogside/telegram-bot/RL-Dialog-Bot/src")
+# sys.path.insert(1, "/home/fogside/telegram-bot/RL-Dialog-Bot/src/deep_dialog")
+# sys.path.insert(1, "/home/fogside/telegram-bot/RL-Dialog-Bot/src/telegram_bot")
 
-import telebot
+
 from emoji import emojize
 import random
 import pickle
 import json
 # from deep_dialog.agents import AgentDQN
 # from deep_dialog.agents import agent_baselines
-from deep_dialog.nlg import nlg
-from deep_dialog.nlu import nlu
-from deep_dialog.usersims.realUser import RealUser
-from telegramDialogClasses import TelegramDialogManager
-from telegramDialogClasses import RuleAgent
+from deep_dialog.dialog_system.dialog_manager_telegram import TelegramDialogManager
+from deep_dialog.dialog_system.kb_helper import KBHelper
+from deep_dialog.dialog_system.state_tracker import StateTracker
+from deep_dialog.agents.agent_rule_telegram import RuleAgent
+from deep_dialog.usersims.real_user import RealUser
+from deep_dialog.nlg.nlg import nlg
+from deep_dialog.nlu.nlu import nlu
 from deep_dialog.dialog_system.dict_reader import text_to_dict
 import telebot
 import cherrypy
@@ -46,17 +53,16 @@ nlg_model.load_predefine_act_nl_pairs(config['diaact_nl_pairs'])
 nlu_model = nlu()
 nlu_model.load_nlu_model(config['nlu_model_path'])
 
-# agent = AgentDQN(movie_kb, act_set, slot_set, config['agent_params'])
-# agent = agent_baselines.EchoAgent(movie_kb, act_set, slot_set, config['agent_params'])
-agent = RuleAgent(movie_kb, act_set, slot_set, config['agent_params'])
+kb_helper = KBHelper(movie_kb)
+state_tracker = StateTracker(kb_helper)
+
+agent = RuleAgent(params=config['agent_params'])
 user = RealUser()
 
 agent.set_nlg_model(nlg_model)
-# user.set_nlg_model(nlg_model)
-# agent.set_nlu_model(nlu_model)
 user.set_nlu_model(nlu_model)
 
-dia_manager = TelegramDialogManager(agent, user, act_set, slot_set, movie_kb)
+dia_manager = TelegramDialogManager(agent, user, state_tracker)
 
 def get_random_emoji(num = 1):
     emoji_list = [":rainbow:", ":octopus:", ":panda_face:",
@@ -186,14 +192,11 @@ if WEBHOOKS_AVAIL:
                 raise cherrypy.HTTPError(403)
 
 
-    # Снимаем вебхук перед повторной установкой (избавляет от некоторых проблем)
     bot.remove_webhook()
 
-    # Ставим заново вебхук
     bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
                     certificate=open(WEBHOOK_SSL_CERT, 'r'))
 
-    # Указываем настройки сервера CherryPy
     cherrypy.config.update({
         'server.socket_host': WEBHOOK_LISTEN,
         'server.socket_port': WEBHOOK_PORT,
@@ -207,4 +210,4 @@ if WEBHOOKS_AVAIL:
 
 else:
     bot.delete_webhook()
-    bot.polling(none_stop=True) ## uncomment it for local testing;
+    bot.polling(none_stop=True)
