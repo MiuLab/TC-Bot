@@ -35,7 +35,7 @@ class Agent:
         self.current_action['request_slots'] = {}
         self.current_action['turn'] = -1
 
-    def state_to_action(self, **kwargs):
+    def state_to_action(self, state=None):
         """ Take the current state and return an action according to the current exploration/exploitation policy
 
         We define the agents flexibly so that they can either operate on act_slot representations or act_slot_value representations.
