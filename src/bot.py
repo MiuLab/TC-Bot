@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+## uncomment if u have problems with imports
 # import sys
 # sys.path.insert(1, "/home/fogside/telegram-bot/RL-Dialog-Bot")
 # sys.path.insert(1, "/home/fogside/telegram-bot/RL-Dialog-Bot/src")
@@ -22,6 +23,7 @@ from deep_dialog.nlu.nlu import nlu
 from deep_dialog.dialog_system.dict_reader import text_to_dict
 import telebot
 import cherrypy
+import argparse
 
 
 def load_file(file_name):
@@ -36,12 +38,25 @@ def load_file(file_name):
 
 ######### --****-- Begin of initialization ---****-- ###########
 
-WEBHOOKS_AVAIL = False
 
-config = load_file("/Users/fogside/Projects/Telegram_bot/RL-Dialog-Bot/src/telegram_bot/config.json")
-bot = telebot.TeleBot(config["token"])
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--cmd_input', dest='cmd_input', type=bool, default=False,
+                    help='if True cmd input is used, default:False')
+parser.add_argument('--webhooks', dest='WEBHOOKS_AVAIL', type=bool, default=False,
+                    help='if true use webhooks which is work well only on right configured server, default:False')
+parser.add_argument('--config_path', dest='config_path', type=str, default='./telegram_bot/config.json',
+                    help='path to dia config file, default:./telegram_bot/config.json')
+
+args = parser.parse_args()
+params = vars(args)
+
+cmd_input = params['cmd_input']
+WEBHOOKS_AVAIL = params['WEBHOOKS_AVAIL']
+config = load_file(params['config_path'])
 
 turn_count = 0
+bot = telebot.TeleBot(config["token"])
 movie_kb = load_file(config["movie_kb_path"])
 act_set = text_to_dict(config['act_set_path'])
 slot_set = text_to_dict(config['slot_set_path'])
@@ -80,29 +95,27 @@ def get_random_emoji(num = 1):
 #########  --****---    End of initialization ---****--   ###########
 ######### --****--- Next code is for debugging ---****-- ############
 
-#
-# dia_manager.initialize_episode()
-# turn_count+=1
-#
-# print("Hello! I can help you to buy tickets to the cinema.\nWhat film would you like to watch?")
-#
-# while(turn_count > 0):
-#     msg = input()
-#     episode_over, agent_ans = dia_manager.next_turn(msg)
-#     turn_count+=1
-#     # bot.send_message(msg, agent_ans+' ' + get_random_emoji(1))
-#     print("turn #{}: {}".format(turn_count, agent_ans))
-#     if episode_over:
-#         turn_count = 0
-#     if msg == 'stop':
-#         turn_count = 0
-#
-# exit(0)
-#
+if cmd_input:
+    dia_manager.initialize_episode()
+    turn_count+=1
 
+    print("Hello! I can help you to buy tickets to the cinema.\nWhat film would you like to watch?")
 
-####### --** End of Debugging **-- ########
+    while(turn_count > 0):
+        msg = input()
+        episode_over, agent_ans = dia_manager.next_turn(msg)
+        turn_count+=1
+        # bot.send_message(msg, agent_ans+' ' + get_random_emoji(1))
+        print("turn #{}: {}".format(turn_count, agent_ans))
+        if episode_over:
+            turn_count = 0
+        if msg == 'stop':
+            turn_count = 0
 
+    exit(0)
+
+############# --** End of Debugging **-- ###############
+####### --** All next code is for telegram **-- ########
 
 
 @bot.message_handler(commands=['help'])
