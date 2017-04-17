@@ -1,5 +1,5 @@
 from .agent import Agent
-from src.deep_dialog import dialog_config
+from deep_dialog import dialog_config
 import numpy as np
 
 

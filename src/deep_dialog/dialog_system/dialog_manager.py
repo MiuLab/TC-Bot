@@ -6,7 +6,7 @@ Created on May 17, 2016
 
 import json
 from .dialog_manager_super import DialogManagerBase
-from src.deep_dialog import dialog_config
+from deep_dialog import dialog_config
 
 
 class DialogManager(DialogManagerBase):

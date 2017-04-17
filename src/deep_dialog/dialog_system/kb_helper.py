@@ -1,6 +1,6 @@
 
 from fuzzywuzzy import fuzz
-from src.deep_dialog import dialog_config
+from deep_dialog import dialog_config
 from collections import defaultdict
 
 

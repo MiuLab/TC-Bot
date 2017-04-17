@@ -14,8 +14,8 @@ from io import StringIO
 
 import numpy as np
 
-from src.deep_dialog import dialog_config
-from src.deep_dialog.nlg.lstmdecodertanh import LSTMDecoderTanh
+from deep_dialog import dialog_config
+from deep_dialog.nlg.lstmdecodertanh import LSTMDecoderTanh
 
 
 class nlg:
