@@ -1,3 +1,5 @@
 numpy
 fuzzywuzzy
 python-Levenshtein
+cherrypy
+telebot
