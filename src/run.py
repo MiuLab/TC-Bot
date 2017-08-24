@@ -318,6 +318,7 @@ def warm_start_simulation():
     cumulative_turns = 0
     
     res = {}
+    warm_start_run_epochs = 0
     for episode in xrange(warm_start_epochs):
         dialog_manager.initialize_episode()
         episode_over = False
@@ -331,13 +332,15 @@ def warm_start_simulation():
                 else: print ("warm_start simulation episode %s: Fail" % (episode))
                 cumulative_turns += dialog_manager.state_tracker.turn_count
         
+        warm_start_run_epochs += 1
+        
         if len(agent.experience_replay_pool) >= agent.experience_replay_pool_size:
             break
-    
+        
     agent.warm_start = 2
-    res['success_rate'] = float(successes)/simulation_epoch_size
-    res['ave_reward'] = float(cumulative_reward)/simulation_epoch_size
-    res['ave_turns'] = float(cumulative_turns)/simulation_epoch_size
+    res['success_rate'] = float(successes)/warm_start_run_epochs
+    res['ave_reward'] = float(cumulative_reward)/warm_start_run_epochs
+    res['ave_turns'] = float(cumulative_turns)/warm_start_run_epochs
     print ("Warm_Start %s epochs, success rate %s, ave reward %s, ave turns %s" % (episode+1, res['success_rate'], res['ave_reward'], res['ave_turns']))
     print ("Current experience replay buffer size %s" % (len(agent.experience_replay_pool)))
 
