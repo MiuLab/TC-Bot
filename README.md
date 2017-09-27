@@ -179,10 +179,10 @@ To evaluate the performance of agents, three metrics are available: success rate
 
 Main papers to be cited
 ```
-@article{li2017end,
+@inproceedings{li2017end,
   title={End-to-End Task-Completion Neural Dialogue Systems},
-  author={Li, Xuijun and Chen, Yun-Nung and Li, Lihong and Gao, Jianfeng},
-  journal={arXiv preprint arXiv:1703.01008},
+  author={Li, Xuijun and Chen, Yun-Nung and Li, Lihong and Gao, Jianfeng and Celikyilmaz, Asli},
+  booktitle={Proceedings of The 8th International Joint Conference on Natural Language Processing},
   year={2017}
 }
 
