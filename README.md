@@ -3,6 +3,8 @@
 [End-to-End Task-Completion Neural Dialogue Systems](http://arxiv.org/abs/1703.01008) and
 [A User Simulator for Task-Completion Dialogues](http://arxiv.org/abs/1612.05688).*
 
+![image](https://github.com/MiuLab/TC-Bot/assets/2268109/afaff914-8f93-4b95-bde8-5a205796e43f)
+
 This document describes how to run the simulation and different dialogue agents (rule-based, command line, reinforcement learning). More instructions to plug in your customized agents or user simulators are in the Recipe section of the paper.
 
 ## Content
