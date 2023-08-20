@@ -32,7 +32,7 @@ import cPickle as pickle
 
 from deep_dialog.dialog_system import DialogManager, text_to_dict
 from deep_dialog.agents import AgentCmd, InformAgent, RequestAllAgent, RandomAgent, EchoAgent, RequestBasicsAgent, AgentDQN
-from deep_dialog.usersims import RuleSimulator
+from deep_dialog.usersims import RuleSimulator, RealUser
 
 from deep_dialog import dialog_config
 from deep_dialog.dialog_config import *
